@@ -1,0 +1,11 @@
+# FinWise Code Owners
+# These owners will be requested for review when someone opens a pull request.
+
+# Default owners for everything in the repo
+* @aarav
+
+# Specific ownership patterns
+/app/api/ @aarav
+/lib/ai/ @aarav
+/supabase/ @aarav
+/.github/ @aarav

@@ -1,0 +1,170 @@
+{
+  "common": {
+    "loading": "Ń gbé wọlé...",
+    "error": "Nǹkan kan ṣe àṣìṣe",
+    "retry": "Gbìyànjú lẹ́ẹ̀kan sí i",
+    "save": "Fipamọ́",
+    "cancel": "Fagilee",
+    "delete": "Pa",
+    "edit": "Ṣàtúnṣe",
+    "close": "Padé",
+    "back": "Padà",
+    "next": "Tókàn",
+    "continue": "Tẹ̀síwájú",
+    "finish": "Parí",
+    "offline": "Kò sí ayelujara",
+    "online": "Wà lórí ayelujara"
+  },
+  "nav": {
+    "chat": "Béèrè lọ́wọ́ Maya",
+    "learn": "Kọ́",
+    "dashboard": "Owó Mi",
+    "resources": "Wá Ìrànlọ́wọ́",
+    "tools": "Àwọn Irinṣẹ́",
+    "settings": "Ètò"
+  },
+  "auth": {
+    "login_title": "Káàbọ̀ sí FinWise",
+    "login_subtitle": "Tẹ nọ́mbà fóònù rẹ láti bẹ̀rẹ̀",
+    "phone_label": "Nọ́mbà fóònù",
+    "phone_placeholder": "123 456 7890",
+    "verify_title": "Fi nọ́mbà rẹ múlẹ̀",
+    "verify_subtitle": "A ti fi kóòdù ránṣẹ́ sí {phone}",
+    "resend_code": "Tún kóòdù ránṣẹ́",
+    "resend_countdown": "Tún ránṣẹ́ ní ìṣẹ́jú {seconds}",
+    "continue": "Tẹ̀síwájú",
+    "back": "Padà",
+    "error_generic": "Nǹkan kan ṣe àṣìṣe. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i.",
+    "terms_notice": "Nípa títẹ̀síwájú, o gbà sí Àwọn Ọ̀rọ̀ Ìṣiṣẹ́ wa àti Ètò Àdàni wa"
+  },
+  "onboarding": {
+    "step": "Ìgbésẹ̀ {current} nínú {total}",
+    "language_title": "Yan èdè rẹ",
+    "language_subtitle": "FinWise yóò bá ọ sọ̀rọ̀ ní èdè rẹ",
+    "country_title": "Níbo ni o wà?",
+    "country_subtitle": "A ó wá àwọn ohun tí o ní tó ọ",
+    "assessment_title": "Sọ fún wa nípa ara rẹ",
+    "assessment_subtitle": "Èyí ń ràn wá lọ́wọ́ láti mú ìrírí rẹ dára sí i",
+    "literacy_question": "Báwo ni o ṣe lè ṣàpèjúwe ìmọ̀ owó rẹ?",
+    "literacy_1": "Mo ṣẹ̀ṣẹ̀ bẹ̀rẹ̀",
+    "literacy_1_desc": "Mi ò tíì kọ́ nípa ṣíṣàkóso owó",
+    "literacy_2": "Mo mọ àwọn nǹkan pàtàkì",
+    "literacy_2_desc": "Mo mọ nípa fífi owó pamọ́ ṣùgbọ́n mo fẹ́ kọ́ síi",
+    "literacy_3": "Mo ní ìrẹ̀lẹ̀ díẹ̀",
+    "literacy_3_desc": "Mo ń ṣàkóso owó mi ṣùgbọ́n mo lè ṣe dáadáa sí i",
+    "literacy_4": "Mo ní ìgbẹ́kẹ̀lé tó dára",
+    "literacy_4_desc": "Mo dára pẹ̀lú owó ṣùgbọ́n mo fẹ́ mú u dára sí i",
+    "literacy_5": "Mo mọ̀ púpọ̀",
+    "literacy_5_desc": "Mo mọ nípa owó dáadáa",
+    "bank_account_question": "Ṣé o ní àkọọ́lẹ̀ bánkì?",
+    "yes": "Bẹ́ẹ̀ni",
+    "no": "Bẹ́ẹ̀kọ́",
+    "profile_title": "Jẹ́ kí a mọ̀ ọ́",
+    "name_label": "Kí ni a ó máa pè ọ́?",
+    "name_placeholder": "Tẹ orúkọ rẹ",
+    "goal_question": "Kí ni èròngbà owó pàtàkì rẹ?",
+    "goal_save_more": "Fipamọ́ owó síi",
+    "goal_pay_debt": "San gbèsè",
+    "goal_start_business": "Bẹ̀rẹ̀ òwò",
+    "goal_send_money": "Fi owó ránṣẹ́ sílé",
+    "goal_budget_better": "Ṣe ètò owó dáadáa",
+    "goal_learn_basics": "Kọ́ àwọn nǹkan pàtàkì",
+    "consent_title": "Àdáni rẹ ṣe pàtàkì",
+    "consent_subtitle": "A mú àbò data rẹ pẹ̀lú ọkàn-àyà",
+    "consent_data_title": "Ṣíṣe Data",
+    "consent_data_desc": "A ó fi data owó rẹ pamọ́ lábẹ́ ààbò láti pèsè ìtọ́sọ́nà tí ó bá ara rẹ mu. O lè pa á rẹ́ nígbàkúgbà.",
+    "consent_ai_title": "Ìkọ́ni AI",
+    "consent_ai_desc": "Maya, olùkọ́ AI wa, yóò lo àlàyé rẹ láti fún ọ ní ìmọ̀ràn tí ó bá ara rẹ mu. A kì í pín data rẹ rárá.",
+    "privacy_promise_title": "Ìlérí Wa",
+    "privacy_promise_desc": "A ti fi data rẹ pamọ́, a kì í tà á rárá, o sì lè gbe é jáde tàbí pa á rẹ́ nígbàkúgbà.",
+    "get_started": "Bẹ̀rẹ̀",
+    "continue": "Tẹ̀síwájú",
+    "back": "Padà"
+  },
+  "chat": {
+    "placeholder": "Béèrè ohunkóhun nípa owó lọ́wọ́ Maya...",
+    "voice_button": "Tẹ láti sọ̀rọ̀",
+    "new_chat": "Ọ̀rọ̀ tuntun",
+    "maya_subtitle": "Olùkọ́ Owó AI Rẹ",
+    "welcome_title": "Pẹ̀lẹ́ o! Mo jẹ́ Maya",
+    "welcome_subtitle": "Olùkọ́ owó ara rẹ. Béèrè ohunkóhun lọ́wọ́ mi nípa fífi owó pamọ́, yíyá ni àwín, ṣíṣe ètò owó, tàbí ṣíṣàkóso owó rẹ.",
+    "try_asking": "Gbìyànjú láti béèrè",
+    "starter_1": "Báwo ni mo ṣe lè ṣí àkọọ́lẹ̀ bánkì?",
+    "starter_2": "Ṣé àwìn yìí wà láàbò?",
+    "starter_3": "Báwo ni mo ṣe lè fipamọ́ owó ní oṣù kọ̀ọ̀kan?",
+    "starter_4": "Báwo ni mo ṣe lè fi owó ránṣẹ́ sílé pẹ̀lú owó díẹ̀?",
+    "starter_5": "Kí ni èlé àti báwo ni ó ṣe ń ṣiṣẹ́?",
+    "starter_6": "Ràn mí lọ́wọ́ láti ṣe ètò owó"
+  },
+  "learn": {
+    "your_progress": "Ìlọsíwájú rẹ",
+    "continue_learning": "Tẹ̀síwájú láti kọ́",
+    "recommended": "A ṣe ìṣedúró fún ọ",
+    "all_modules": "Gbogbo àwọn module",
+    "completed": "Ti parí",
+    "locked": "Parí {module} ní àkọ́kọ́",
+    "minutes": "ìṣẹ́jú {n}",
+    "beginner": "Olùbẹ̀rẹ̀",
+    "intermediate": "Àárín",
+    "advanced": "Olùmọ̀ràn",
+    "lessons": "Àwọn Ẹ̀kọ́",
+    "back_to_modules": "Padà sí àwọn module",
+    "previous": "Tẹ́lẹ̀",
+    "next": "Ẹ̀kọ́ tókàn",
+    "finish_module": "Parí module",
+    "content_not_available": "Àkóónú kò sí ní èdè rẹ síbẹ̀síbẹ̀. Jọ̀wọ́ gbìyànjú èdè Gẹ̀ẹ́sì."
+  },
+  "dashboard": {
+    "title": "Owó Mi",
+    "health_score": "Àmì Ìlera Owó",
+    "this_month": "Oṣù Yìí",
+    "income": "Owó Tí N Wọlé",
+    "expenses": "Owó Tí N Jáde",
+    "savings": "Àkójọpọ̀",
+    "spent": "Ti ná",
+    "add_entry": "Fi Àkọsílẹ̀ Kun",
+    "your_goals": "Àwọn Èròngbà Rẹ",
+    "add_goal": "Èròngbà Tuntun",
+    "recent": "Ìṣẹ̀lẹ̀ Àìpẹ́",
+    "expense": "Ìnáwó",
+    "amount": "Iye",
+    "category": "Ẹ̀ka",
+    "select_category": "Yan ẹ̀ka kan",
+    "date": "Ọjọ́",
+    "description": "Àpèjúwe",
+    "description_placeholder": "Kí ni èyí jẹ́ fún?",
+    "optional": "kì í ṣe dandan"
+  },
+  "modules": {
+    "savings_basics": {
+      "title": "Ìpìlẹ̀ Fífi Owó Pamọ́",
+      "description": "Kọ́ bí o ṣe lè fipamọ́ owó lábẹ́ ààbò kí o sì mú àbò owó rẹ dàgbà"
+    },
+    "smart_borrowing": {
+      "title": "Yíyá Ni Àwìn Pẹ̀lú Ọgbọ́n",
+      "description": "Mọ àwọn àwìn, ìwọ̀n èlé, àti bí o ṣe lè yá ni àwìn láìdí"
+    },
+    "remittance": {
+      "title": "Fífi Owó Ránṣẹ́ Sílé",
+      "description": "Fi owó ránṣẹ́ sí ìdílé pẹ̀lú iye owó kékeré àti lábẹ́ ààbò pẹ̀lú àwọn iṣẹ́ tó dára jùlọ"
+    },
+    "protection": {
+      "title": "Àbò Owó Rẹ",
+      "description": "Pa owó rẹ mọ́ kúrò lọ́wọ́ àwọn onílàákàyè, olè, àti àwọn ìṣẹ̀lẹ̀ àìròtẹ́lẹ̀"
+    },
+    "business": {
+      "title": "Ṣíṣe Òwò",
+      "description": "Bẹ̀rẹ̀ kí o sì mú òwò kékeré dàgbà pẹ̀lú àwọn ìlànà owó tó dára"
+    },
+    "future": {
+      "title": "Gbèròngbà Ọjọ́ Iwájú Rẹ",
+      "description": "Ṣètò àwọn èròngbà, kọ́ àwọn àṣà, kí o sì dá àbò owó sílẹ̀ fún àwọn ọdún tó ń bọ̀"
+    }
+  },
+  "errors": {
+    "generic": "Nǹkan kan ṣe àṣìṣe. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i.",
+    "offline": "O kò sí lórí ayelujara. Àwọn iṣẹ́ kan le ní ààlà.",
+    "ai_unavailable": "Maya wà ní iṣẹ́ lọ́wọ́lọ́wọ́. Gbìyànjú lẹ́yìn ìṣẹ́jú díẹ̀.",
+    "session_expired": "Àkókò rẹ ti parí. Jọ̀wọ́ wọlé padà."
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "common": {
+    "loading": "Inapakia...",
+    "error": "Kuna tatizo",
+    "retry": "Jaribu tena",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "close": "Funga",
+    "back": "Rudi",
+    "next": "Mbele",
+    "continue": "Endelea",
+    "finish": "Maliza",
+    "offline": "Nje ya mtandao",
+    "online": "Mtandaoni"
+  },
+  "nav": {
+    "chat": "Uliza Maya",
+    "learn": "Jifunze",
+    "dashboard": "Pesa Yangu",
+    "resources": "Pata Msaada",
+    "tools": "Zana",
+    "settings": "Mipangilio"
+  },
+  "auth": {
+    "login_title": "Karibu FinWise",
+    "login_subtitle": "Weka nambari yako ya simu kuanza",
+    "phone_label": "Nambari ya simu",
+    "phone_placeholder": "123 456 7890",
+    "verify_title": "Thibitisha nambari yako",
+    "verify_subtitle": "Tumetuma nambari kwa {phone}",
+    "resend_code": "Tuma tena nambari",
+    "resend_countdown": "Tuma tena baada ya sekunde {seconds}",
+    "continue": "Endelea",
+    "back": "Rudi",
+    "error_generic": "Kuna tatizo. Tafadhali jaribu tena.",
+    "terms_notice": "Kwa kuendelea, unakubali Masharti yetu ya Huduma na Sera ya Faragha"
+  },
+  "onboarding": {
+    "step": "Hatua {current} ya {total}",
+    "language_title": "Chagua lugha yako",
+    "language_subtitle": "FinWise itazungumza nawe kwa lugha yako",
+    "country_title": "Unaishi wapi?",
+    "country_subtitle": "Tutakupata rasilimali karibu nawe",
+    "assessment_title": "Tuambie kuhusu wewe",
+    "assessment_subtitle": "Hii inatusaidia kukupa uzoefu unaofaa",
+    "literacy_question": "Ungeelezeaje ujuzi wako wa fedha?",
+    "literacy_1": "Naanza tu",
+    "literacy_1_desc": "Sijawahi kujifunza kusimamia pesa",
+    "literacy_2": "Najua misingi",
+    "literacy_2_desc": "Naelewa kuokoa lakini nataka kujifunza zaidi",
+    "literacy_3": "Ninastarehe kiasi",
+    "literacy_3_desc": "Ninasimamia pesa zangu lakini ninaweza kufanya vizuri zaidi",
+    "literacy_4": "Nina imani kiasi",
+    "literacy_4_desc": "Ninajua fedha vizuri lakini nataka kuboresha",
+    "literacy_5": "Nina ujuzi sana",
+    "literacy_5_desc": "Naelewa fedha vizuri",
+    "bank_account_question": "Una akaunti ya benki?",
+    "yes": "Ndiyo",
+    "no": "Hapana",
+    "profile_title": "Hebu tukufahamu",
+    "name_label": "Tukuite nani?",
+    "name_placeholder": "Weka jina lako",
+    "goal_question": "Lengo lako kuu la kifedha ni nini?",
+    "goal_save_more": "Kuokoa pesa zaidi",
+    "goal_pay_debt": "Kulipa deni",
+    "goal_start_business": "Kuanza biashara",
+    "goal_send_money": "Kutuma pesa nyumbani",
+    "goal_budget_better": "Kupanga bajeti vizuri",
+    "goal_learn_basics": "Kujifunza misingi",
+    "consent_title": "Faragha yako ni muhimu",
+    "consent_subtitle": "Tunachukulia usalama wa data yako kwa uzito",
+    "consent_data_title": "Usindikaji wa Data",
+    "consent_data_desc": "Tutahifadhi data yako ya kifedha kwa usalama kutoa mwongozo wa kibinafsi. Unaweza kuifuta wakati wowote.",
+    "consent_ai_title": "Mafunzo ya AI",
+    "consent_ai_desc": "Maya, kocha wetu wa AI, atatumia taarifa zako kukupa ushauri wa kibinafsi. Data yako haitashirikiwa kamwe.",
+    "privacy_promise_title": "Ahadi Yetu",
+    "privacy_promise_desc": "Data yako imefichiwa, haiuzwi kamwe, na unaweza kuihamisha au kuifuta wakati wowote.",
+    "get_started": "Anza",
+    "continue": "Endelea",
+    "back": "Rudi"
+  },
+  "chat": {
+    "placeholder": "Uliza Maya chochote kuhusu pesa...",
+    "voice_button": "Shikilia kuzungumza",
+    "new_chat": "Mazungumzo mapya",
+    "maya_subtitle": "Kocha Wako wa Fedha wa AI",
+    "welcome_title": "Habari! Mimi ni Maya",
+    "welcome_subtitle": "Kocha wako wa fedha wa kibinafsi. Niulize chochote kuhusu kuokoa, kukopa, kupanga bajeti, au kusimamia pesa zako.",
+    "try_asking": "Jaribu kuuliza",
+    "starter_1": "Ninafunguaje akaunti ya benki?",
+    "starter_2": "Je, ofa hii ya mkopo ni salama?",
+    "starter_3": "Ninaokoaje pesa kila mwezi?",
+    "starter_4": "Ninawezaje kutuma pesa nyumbani kwa bei nafuu?",
+    "starter_5": "Riba ni nini na inafanyaje kazi?",
+    "starter_6": "Nisaidie kupanga bajeti"
+  },
+  "learn": {
+    "your_progress": "Maendeleo yako",
+    "continue_learning": "Endelea kujifunza",
+    "recommended": "Iliyopendekezwa kwako",
+    "all_modules": "Moduli zote",
+    "completed": "Imekamilika",
+    "locked": "Kamilisha {module} kwanza",
+    "minutes": "dakika {n}",
+    "beginner": "Mwanzo",
+    "intermediate": "Kati",
+    "advanced": "Juu",
+    "lessons": "Masomo",
+    "back_to_modules": "Rudi kwa moduli",
+    "previous": "Iliyopita",
+    "next": "Somo lijalo",
+    "finish_module": "Maliza moduli",
+    "content_not_available": "Maudhui hayapatikani kwa lugha yako bado. Tafadhali jaribu Kiingereza."
+  },
+  "dashboard": {
+    "title": "Pesa Yangu",
+    "health_score": "Alama ya Afya ya Fedha",
+    "this_month": "Mwezi Huu",
+    "income": "Mapato",
+    "expenses": "Matumizi",
+    "savings": "Akiba",
+    "spent": "Imetumika",
+    "add_entry": "Ongeza Ingizo",
+    "your_goals": "Malengo Yako",
+    "add_goal": "Lengo Jipya",
+    "recent": "Shughuli za Hivi Karibuni",
+    "expense": "Gharama",
+    "amount": "Kiasi",
+    "category": "Aina",
+    "select_category": "Chagua aina",
+    "date": "Tarehe",
+    "description": "Maelezo",
+    "description_placeholder": "Hii ilikuwa kwa nini?",
+    "optional": "si lazima"
+  },
+  "modules": {
+    "savings_basics": {
+      "title": "Misingi ya Kuokoa",
+      "description": "Jifunze jinsi ya kuokoa pesa kwa usalama na kukuza usalama wako wa kifedha"
+    },
+    "smart_borrowing": {
+      "title": "Kukopa kwa Busara",
+      "description": "Elewa mikopo, viwango vya riba, na jinsi ya kukopa bila kunaswa"
+    },
+    "remittance": {
+      "title": "Kutuma Pesa Nyumbani",
+      "description": "Tuma pesa kwa familia kwa bei nafuu na kwa usalama kwa kutumia huduma bora"
+    },
+    "protection": {
+      "title": "Kulinda Pesa Zako",
+      "description": "Hifadhi pesa zako kutoka kwa ulaghai, wizi, na matukio yasiyotarajiwa"
+    },
+    "business": {
+      "title": "Kuendesha Biashara",
+      "description": "Anza na kukuza biashara ndogo kwa mazoea mazuri ya kifedha"
+    },
+    "future": {
+      "title": "Kupanga Wakati Ujao",
+      "description": "Weka malengo, jenga tabia, na tengeneza usalama wa kifedha kwa miaka ijayo"
+    }
+  },
+  "errors": {
+    "generic": "Kuna tatizo. Tafadhali jaribu tena.",
+    "offline": "Uko nje ya mtandao. Baadhi ya vipengele vinaweza kuwa na vikwazo.",
+    "ai_unavailable": "Maya ana shughuli sasa. Jaribu tena baadaye.",
+    "session_expired": "Kipindi chako kimeisha. Tafadhali ingia tena."
+  }
+}
