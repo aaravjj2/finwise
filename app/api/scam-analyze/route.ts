@@ -1,4 +1,4 @@
-import { anthropic, ANALYSIS_MODEL, SCAM_ANALYSIS_MAX_TOKENS } from '@/lib/ai/client';
+import { anthropic, ANALYSIS_MODEL, SCAM_ANALYSIS_MAX_TOKENS, ensureApiKey } from '@/lib/ai/client';
 import { buildScamDetectionPrompt } from '@/lib/ai/tools';
 import { createClient } from '@/lib/db/supabase';
 import { z } from 'zod';
@@ -9,6 +9,8 @@ const requestSchema = z.object({
 
 export async function POST(req: Request): Promise<Response> {
   try {
+    ensureApiKey();
+
     const supabase = createClient();
     const {
       data: { user },

@@ -1,4 +1,4 @@
-import { anthropic, CHAT_MODEL, DEFAULT_MAX_TOKENS } from '@/lib/ai/client';
+import { anthropic, CHAT_MODEL, DEFAULT_MAX_TOKENS, ensureApiKey } from '@/lib/ai/client';
 import { buildSystemPrompt } from '@/lib/ai/system-prompt';
 import { buildMessageHistory } from '@/lib/ai/context-builder';
 import { createClient } from '@/lib/db/supabase';
@@ -12,6 +12,8 @@ const requestSchema = z.object({
 
 export async function POST(req: Request): Promise<Response> {
   try {
+    ensureApiKey();
+
     const supabase = createClient();
     const {
       data: { user },
