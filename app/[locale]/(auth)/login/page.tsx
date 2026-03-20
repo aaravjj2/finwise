@@ -13,7 +13,7 @@ export default function LoginPage(): JSX.Element {
   const t = useTranslations('auth');
   const router = useRouter();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
   const [step, setStep] = useState<AuthStep>('phone');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);

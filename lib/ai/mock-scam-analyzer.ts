@@ -112,7 +112,7 @@ function getRiskLevel(score: number): 'low' | 'medium' | 'high' | 'very_high' {
   return 'very_high';
 }
 
-function getRecommendation(riskLevel: string, redFlags: Array<{ flag: string }>): string {
+function getRecommendation(riskLevel: string): string {
   switch (riskLevel) {
     case 'very_high':
       return 'DO NOT proceed with this offer. This shows multiple signs of being a scam. Do not send any money or share personal information. Report this to your local financial regulator.';
@@ -209,7 +209,7 @@ export function analyzeScamRisk(text: string): ScamAnalysisResult {
     risk_score: riskScore,
     red_flags: redFlags,
     legitimate_indicators: legitimateIndicators,
-    recommendation: getRecommendation(riskLevel, redFlags),
+    recommendation: getRecommendation(riskLevel),
     summary: getSummary(riskLevel, redFlags.length)
   };
 }

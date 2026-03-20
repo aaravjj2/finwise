@@ -1,5 +1,8 @@
 module.exports = {
-  extends: ['next/core-web-vitals', 'next/typescript'],
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  extends: ['next/core-web-vitals'],
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn',

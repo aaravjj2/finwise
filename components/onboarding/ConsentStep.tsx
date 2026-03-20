@@ -14,7 +14,7 @@ interface ConsentStepProps {
 export function ConsentStep({ onNext, onBack, loading = false }: ConsentStepProps): JSX.Element {
   const t = useTranslations('onboarding');
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
   const [consent, setConsent] = useState(false);
 
   function handleSubmit(): void {

@@ -17,7 +17,7 @@ interface ChatPageProps {
   };
 }
 
-export default async function ChatPage({ params }: ChatPageProps): Promise<JSX.Element> {
+export default async function ChatPage({ params: _params }: ChatPageProps): Promise<JSX.Element> {
   const t = await getTranslations('chat');
   const supabase = createClient();
 

@@ -20,7 +20,7 @@ export function ModuleCard({
 }: ModuleCardProps): JSX.Element {
   const t = useTranslations();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   const difficultyLabels: Record<number, string> = {
     1: t('learn.beginner'),

@@ -54,7 +54,7 @@ export function BottomNav({ className }: BottomNavProps): JSX.Element {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   return (
     <nav
@@ -71,6 +71,7 @@ export function BottomNav({ className }: BottomNavProps): JSX.Element {
             <Link
               key={item.href}
               href={href}
+              aria-label={t(item.labelKey)}
               className={clsx(
                 'flex min-h-11 flex-1 flex-col items-center justify-center py-2 tap-target',
                 isActive

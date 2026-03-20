@@ -161,7 +161,7 @@ async function seedDemo(): Promise<void> {
       .select('id');
   }
 
-  console.log(`Demo account seeded for user ${userId}`);
+  process.stdout.write(`Demo account seeded for user ${userId}\n`);
 }
 
 seedDemo().catch((error) => {

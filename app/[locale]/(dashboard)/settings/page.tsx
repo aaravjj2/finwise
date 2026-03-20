@@ -32,7 +32,7 @@ export default function SettingsPage(): JSX.Element {
   const t = useTranslations('settings');
   const params = useParams();
   const router = useRouter();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
   const supabase = createClient();
   const [notificationEnabled, setNotificationEnabled] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState('');

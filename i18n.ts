@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { getRequestConfig } from 'next-intl/server';
 
 export const locales = [
@@ -7,6 +6,16 @@ export const locales = [
   'sw',
   'yo',
   'bn',
+  'tl',
+  'es',
+  'pt',
+  'ha',
+  'am',
+  'zu',
+  'ig',
+  'ta',
+  'id',
+  'vi',
 ] as const;
 
 export type Locale = (typeof locales)[number];
@@ -19,6 +28,16 @@ export const localeNames: Record<Locale, string> = {
   sw: 'Kiswahili',
   yo: 'Yorùbá',
   bn: 'বাংলা',
+  tl: 'Filipino',
+  es: 'Español',
+  pt: 'Português (Brasil)',
+  ha: 'Hausa',
+  am: 'አማርኛ',
+  zu: 'isiZulu',
+  ig: 'Igbo',
+  ta: 'தமிழ்',
+  id: 'Bahasa Indonesia',
+  vi: 'Tiếng Việt',
 };
 
 export const rtlLocales: Locale[] = [];
@@ -29,13 +48,12 @@ export function isRtl(locale: Locale): boolean {
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const locale = await requestLocale;
-
-  if (!locale || !locales.includes(locale as Locale)) {
-    notFound();
-  }
+  const resolvedLocale = locale && locales.includes(locale as Locale)
+    ? (locale as Locale)
+    : defaultLocale;
 
   return {
-    locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
+    locale: resolvedLocale,
+    messages: (await import(`./messages/${resolvedLocale}.json`)).default,
   };
 });

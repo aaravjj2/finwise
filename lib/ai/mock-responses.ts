@@ -71,7 +71,7 @@ export function getFollowUpSuggestions(message: string): string[] {
   return suggestions ?? DEFAULT_SUGGESTIONS;
 }
 
-export function getMockResponse(message: string, language: string = 'en'): string {
+export function getMockResponse(message: string, _language: string = 'en'): string {
   const lowerMessage = message.toLowerCase();
 
   if (/open\s*account|first\s*account|how\s*to\s*bank|documents?/i.test(lowerMessage)) {
@@ -137,7 +137,7 @@ You can also start with one of these: How do I open a bank account? Is this loan
 Which one should we tackle first?`;
 }
 
-export function getGreeting(name: string, language: string = 'en'): string {
+export function getGreeting(name: string, _language: string = 'en'): string {
   const hour = new Date().getHours();
   let timeGreeting = 'Hello';
 

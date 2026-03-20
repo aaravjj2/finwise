@@ -25,7 +25,7 @@ export function ChatContainer({
 }: ChatContainerProps): JSX.Element {
   const t = useTranslations('chat');
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState('there');
 

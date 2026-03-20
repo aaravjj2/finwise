@@ -22,7 +22,7 @@ interface UseChatReturn {
 export function useChat({ conversationId: initialConvId, initialMessages = [] }: UseChatOptions = {}): UseChatReturn {
   const router = useRouter();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);

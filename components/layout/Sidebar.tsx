@@ -59,7 +59,7 @@ export function Sidebar({ className }: SidebarProps): JSX.Element {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   return (
     <aside

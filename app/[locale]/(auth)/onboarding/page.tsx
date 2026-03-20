@@ -19,7 +19,7 @@ export default function OnboardingPage(): JSX.Element {
   const t = useTranslations('onboarding');
   const router = useRouter();
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
