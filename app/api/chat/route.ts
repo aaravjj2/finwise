@@ -94,7 +94,15 @@ export async function POST(req: Request): Promise<Response> {
       };
     }
 
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return Response.json(
+        { error: 'Invalid JSON body', code: 'INVALID_JSON' },
+        { status: 400 }
+      );
+    }
     const parsed = requestSchema.safeParse(body);
 
     if (!parsed.success) {
