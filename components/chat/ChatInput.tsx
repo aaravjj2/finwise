@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, type KeyboardEvent } from 'react';
+import { useState, useRef, type KeyboardEvent, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { VoiceInput } from './VoiceInput';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -11,6 +12,7 @@ interface ChatInputProps {
 export function ChatInput({ onSend, disabled = false }: ChatInputProps): JSX.Element {
   const t = useTranslations('chat');
   const [message, setMessage] = useState('');
+  const [liveTranscript, setLiveTranscript] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function handleSubmit(): void {
@@ -36,8 +38,30 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps): JSX.Ele
     }
   }
 
+  const handleVoiceTranscript = useCallback((transcript: string) => {
+    const merged = `${message.trim()} ${transcript.trim()}`.trim();
+    if (!merged) return;
+    onSend(merged);
+    setMessage('');
+    setLiveTranscript('');
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [message, onSend]);
+
   return (
+    <div>
+      {liveTranscript && (
+        <p className="mb-2 text-sm italic text-neutral-500 dark:text-neutral-400">{liveTranscript}</p>
+      )}
     <div className="flex items-end gap-2">
+      {/* Voice Input */}
+      <VoiceInput
+        onTranscript={handleVoiceTranscript}
+        onInterimTranscript={setLiveTranscript}
+        disabled={disabled}
+      />
+
       <div className="relative flex-1">
         <textarea
           ref={textareaRef}
@@ -68,6 +92,7 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps): JSX.Ele
           </svg>
         )}
       </button>
+    </div>
     </div>
   );
 }

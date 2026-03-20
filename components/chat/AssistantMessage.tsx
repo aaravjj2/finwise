@@ -2,6 +2,7 @@
 
 import type { Message, CardData } from '@/types';
 import { parseCardData } from '@/lib/ai/context-builder';
+import { AudioPlayer } from './AudioPlayer';
 
 interface AssistantMessageProps {
   message: Message;
@@ -11,16 +12,17 @@ interface AssistantMessageProps {
 export function AssistantMessage({ message, isStreaming = false }: AssistantMessageProps): JSX.Element {
   const { text, card } = parseCardData(message.content);
   const cardData = message.card_data || card;
+  const relativeTime = formatRelativeTime(message.created_at);
 
   return (
     <div className="flex gap-3">
-      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm dark:bg-primary-900/30">
-        ✨
+      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-semibold text-white">
+        M
       </div>
       <div className="max-w-[85%] space-y-3">
         {/* Text content */}
         {text && (
-          <div className="rounded-2xl rounded-tl-md bg-neutral-100 px-4 py-3 dark:bg-neutral-800">
+          <div className="rounded-2xl rounded-tl-md border border-neutral-200 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-neutral-900">
             <p className="text-sm leading-relaxed whitespace-pre-wrap text-neutral-800 dark:text-neutral-200">
               {text}
               {isStreaming && <span className="ml-1 inline-block h-4 w-1 animate-pulse bg-primary-500" />}
@@ -31,18 +33,29 @@ export function AssistantMessage({ message, isStreaming = false }: AssistantMess
         {/* Card rendering */}
         {cardData && <CardRenderer card={cardData} />}
 
-        {/* Timestamp */}
+        {/* Audio playback and timestamp */}
         {!isStreaming && (
-          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-            {new Date(message.created_at).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </p>
+          <div className="flex items-center gap-2">
+            {message.audio_url && text && text.length > 20 && <AudioPlayer text={text} />}
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              {relativeTime}
+            </p>
+          </div>
         )}
       </div>
     </div>
   );
+}
+
+function formatRelativeTime(createdAt: string): string {
+  const timestamp = new Date(createdAt).getTime();
+  const now = Date.now();
+  const deltaSeconds = Math.max(0, Math.floor((now - timestamp) / 1000));
+
+  if (deltaSeconds < 45) return 'Just now';
+  if (deltaSeconds < 3600) return `${Math.floor(deltaSeconds / 60)} min ago`;
+  if (deltaSeconds < 86400) return `${Math.floor(deltaSeconds / 3600)} hr ago`;
+  return `${Math.floor(deltaSeconds / 86400)} day ago`;
 }
 
 function CardRenderer({ card }: { card: CardData }): JSX.Element | null {
@@ -55,6 +68,8 @@ function CardRenderer({ card }: { card: CardData }): JSX.Element | null {
       return <ChecklistCard data={card.data as { title: string; items: string[] }} />;
     case 'comparison-table':
       return <ComparisonTableCard data={card.data as { headers: string[]; rows: string[][] }} />;
+    case 'budget':
+      return <BudgetCardRenderer data={card.data as { income: number; categories: { name: string; amount: number; percentage: number }[] }} />;
     default:
       return null;
   }
@@ -151,6 +166,60 @@ function ComparisonTableCard({ data }: { data: { headers: string[]; rows: string
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function BudgetCardRenderer({ data }: { data: { income: number; categories: { name: string; amount: number; percentage: number }[] } }): JSX.Element {
+  const totalExpenses = data.categories.reduce((sum, cat) => sum + cat.amount, 0);
+  const savings = data.income - totalExpenses;
+  const savingsRate = data.income > 0 ? ((savings / data.income) * 100).toFixed(0) : 0;
+
+  return (
+    <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="text-lg">💰</span>
+        <span className="font-medium text-neutral-900 dark:text-white">Budget Breakdown</span>
+      </div>
+
+      {/* Income */}
+      <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-2 dark:border-neutral-700">
+        <span className="text-sm text-neutral-600 dark:text-neutral-400">Monthly Income</span>
+        <span className="font-semibold text-neutral-900 dark:text-white">${data.income.toLocaleString()}</span>
+      </div>
+
+      {/* Categories */}
+      <div className="space-y-2">
+        {data.categories.map((category, index) => (
+          <div key={index} className="flex items-center gap-3">
+            <div className="flex-1">
+              <div className="flex justify-between text-xs">
+                <span className="text-neutral-700 dark:text-neutral-300">{category.name}</span>
+                <span className="text-neutral-500 dark:text-neutral-400">{category.percentage}%</span>
+              </div>
+              <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+                <div
+                  className="h-full rounded-full bg-primary-500"
+                  style={{ width: `${Math.min(category.percentage, 100)}%` }}
+                />
+              </div>
+            </div>
+            <span className="w-20 text-right text-sm font-medium text-neutral-700 dark:text-neutral-300">
+              ${category.amount.toLocaleString()}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Savings Summary */}
+      <div className="mt-3 flex items-center justify-between border-t border-neutral-200 pt-3 dark:border-neutral-700">
+        <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+          Savings ({savingsRate}%)
+        </span>
+        <span className={`font-bold ${savings >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+          ${savings.toLocaleString()}
+        </span>
+      </div>
     </div>
   );
 }

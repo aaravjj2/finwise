@@ -26,12 +26,48 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return NextResponse.next();
   }
 
+  // Check for demo mode cookie
+  const isDemoMode = request.cookies.get('finwise_demo_mode')?.value === 'true';
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
 
+  // Get locale from path or use default
+  const pathLocale = getLocaleFromPath(pathname);
+  const locale = pathLocale || defaultLocale;
+
+  // Remove locale from pathname for checking
+  const pathnameWithoutLocale = pathLocale ? pathname.replace(`/${pathLocale}`, '') || '/' : pathname;
+
+  // Check if path is public
+  const isPublicPath = publicPaths.some(
+    (path) => pathnameWithoutLocale === path || pathnameWithoutLocale.startsWith(`${path}/`)
+  );
+
+  // In demo mode, allow access to all authenticated routes
+  if (isDemoMode) {
+    // Redirect demo users away from login page to chat
+    if (pathnameWithoutLocale === '/login') {
+      return NextResponse.redirect(new URL(`/${locale}/chat`, request.url));
+    }
+
+    // Add locale to path if missing
+    if (!pathLocale && pathname !== '/') {
+      return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url));
+    }
+
+    // Redirect root to chat for demo users
+    if (pathname === '/') {
+      return NextResponse.redirect(new URL(`/${defaultLocale}/chat`, request.url));
+    }
+
+    return response;
+  }
+
+  // Normal auth flow for non-demo mode
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -65,18 +101,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  // Get locale from path or use default
-  const pathLocale = getLocaleFromPath(pathname);
-  const locale = pathLocale || defaultLocale;
-
-  // Remove locale from pathname for checking
-  const pathnameWithoutLocale = pathLocale ? pathname.replace(`/${pathLocale}`, '') || '/' : pathname;
-
-  // Check if path is public
-  const isPublicPath = publicPaths.some(
-    (path) => pathnameWithoutLocale === path || pathnameWithoutLocale.startsWith(`${path}/`)
-  );
 
   // Redirect to login if not authenticated and not on public path
   if (!user && !isPublicPath) {

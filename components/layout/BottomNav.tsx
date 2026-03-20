@@ -14,6 +14,7 @@ const navItems = [
   { href: '/learn', icon: 'learn', labelKey: 'learn' },
   { href: '/dashboard', icon: 'dashboard', labelKey: 'dashboard' },
   { href: '/resources', icon: 'resources', labelKey: 'resources' },
+  { href: '/settings', icon: 'settings', labelKey: 'settings' },
 ];
 
 function NavIcon({ name, className }: { name: string; className?: string }): JSX.Element {
@@ -37,6 +38,12 @@ function NavIcon({ name, className }: { name: string; className?: string }): JSX
       <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    settings: (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
   };
@@ -65,14 +72,14 @@ export function BottomNav({ className }: BottomNavProps): JSX.Element {
               key={item.href}
               href={href}
               className={clsx(
-                'flex flex-1 flex-col items-center justify-center py-2 tap-target',
+                'flex min-h-11 flex-1 flex-col items-center justify-center py-2 tap-target',
                 isActive
                   ? 'text-primary-600 dark:text-primary-400'
                   : 'text-neutral-500 dark:text-neutral-400'
               )}
             >
               <NavIcon name={item.icon} className="h-6 w-6" />
-              <span className="mt-1 text-xs font-medium">{t(item.labelKey)}</span>
+              {isActive && <span className="mt-1 text-xs font-medium">{t(item.labelKey)}</span>}
             </Link>
           );
         })}

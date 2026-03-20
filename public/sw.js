@@ -1,77 +1,55 @@
-// FinWise Service Worker
-const CACHE_NAME = 'finwise-v1';
+const CACHE_NAME = 'finwise-v2';
 const OFFLINE_URL = '/offline';
+const STATIC_CACHE = [OFFLINE_URL, '/manifest.json'];
 
-const STATIC_ASSETS = [
-  '/',
-  '/offline',
-  '/manifest.json',
-];
+async function cacheFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+  if (cached) return cached;
 
-const CACHE_STRATEGIES = {
-  // Cache first, then network
-  cacheFirst: async (request, cacheName = CACHE_NAME) => {
-    const cache = await caches.open(cacheName);
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
+  const response = await fetch(request);
+  if (response.ok) {
+    cache.put(request, response.clone());
+  }
+  return response;
+}
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      cache.put(request, response.clone());
     }
-    try {
-      const networkResponse = await fetch(request);
-      if (networkResponse.ok) {
-        cache.put(request, networkResponse.clone());
-      }
-      return networkResponse;
-    } catch {
-      return new Response('Offline', { status: 503 });
+    return response;
+  } catch {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    if (request.mode === 'navigate') {
+      return (await cache.match(OFFLINE_URL)) || new Response('Offline', { status: 503 });
     }
-  },
+    return new Response('Offline', { status: 503 });
+  }
+}
 
-  // Network first, fallback to cache
-  networkFirst: async (request, cacheName = CACHE_NAME) => {
-    try {
-      const networkResponse = await fetch(request);
-      if (networkResponse.ok) {
-        const cache = await caches.open(cacheName);
-        cache.put(request, networkResponse.clone());
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+  const network = fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        cache.put(request, response.clone());
       }
-      return networkResponse;
-    } catch {
-      const cache = await caches.open(cacheName);
-      const cachedResponse = await cache.match(request);
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      // Return offline page for navigation requests
-      if (request.mode === 'navigate') {
-        return caches.match(OFFLINE_URL);
-      }
-      return new Response('Offline', { status: 503 });
-    }
-  },
-
-  // Stale while revalidate
-  staleWhileRevalidate: async (request, cacheName = CACHE_NAME) => {
-    const cache = await caches.open(cacheName);
-    const cachedResponse = await cache.match(request);
-
-    const fetchPromise = fetch(request).then((networkResponse) => {
-      if (networkResponse.ok) {
-        cache.put(request, networkResponse.clone());
-      }
-      return networkResponse;
-    }).catch(() => null);
-
-    return cachedResponse || fetchPromise;
-  },
-};
+      return response;
+    })
+    .catch(() => null);
+  return cached || network;
+}
 
 // Install event
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_CACHE))
   );
   self.skipWaiting();
 });
@@ -100,30 +78,36 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Skip API calls (handle offline queue separately)
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(CACHE_STRATEGIES.networkFirst(request));
+    event.respondWith(networkFirst(request));
     return;
   }
 
-  // Static assets - cache first
   if (
+    url.pathname.endsWith('.css') ||
+    url.pathname.endsWith('.woff2') ||
+    url.pathname.endsWith('.woff') ||
+    url.pathname.endsWith('.json') ||
     url.pathname.startsWith('/_next/static/') ||
-    url.pathname.startsWith('/icons/') ||
+    url.pathname.includes('/icon-') ||
+    url.pathname.endsWith('/manifest.json') ||
     url.pathname.match(/\.(png|jpg|jpeg|webp|svg|ico|woff2?)$/)
   ) {
-    event.respondWith(CACHE_STRATEGIES.cacheFirst(request));
+    event.respondWith(cacheFirst(request));
     return;
   }
 
-  // HTML pages - network first
+  if (url.pathname.startsWith('/api/chat')) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
   if (request.mode === 'navigate') {
-    event.respondWith(CACHE_STRATEGIES.networkFirst(request));
+    event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
-  // Default - stale while revalidate
-  event.respondWith(CACHE_STRATEGIES.staleWhileRevalidate(request));
+  event.respondWith(staleWhileRevalidate(request));
 });
 
 // Background sync for offline mutations
@@ -142,30 +126,3 @@ async function syncOfflineEntries() {
   });
 }
 
-// Push notifications (for future use)
-self.addEventListener('push', (event) => {
-  if (!event.data) return;
-
-  const data = event.data.json();
-  const options = {
-    body: data.body,
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/badge-72x72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      url: data.url || '/',
-    },
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
-});
-
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  event.waitUntil(
-    clients.openWindow(event.notification.data.url)
-  );
-});

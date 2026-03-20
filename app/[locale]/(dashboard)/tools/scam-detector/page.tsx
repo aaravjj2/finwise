@@ -30,6 +30,7 @@ export default function ScamDetectorPage(): JSX.Element {
       }
 
       const data = await response.json();
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setResult(data);
     } catch {
       setError(t('analysis_error'));

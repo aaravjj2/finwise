@@ -1,4 +1,5 @@
 import { textToSpeech } from '@/lib/voice/elevenlabs';
+import { isTTSAvailable } from '@/lib/ai/mock-tts';
 import { z } from 'zod';
 
 const requestSchema = z.object({
@@ -8,6 +9,14 @@ const requestSchema = z.object({
 
 export async function POST(req: Request): Promise<Response> {
   try {
+    // Check if TTS is available
+    if (!isTTSAvailable()) {
+      return Response.json(
+        { error: 'TTS not configured', code: 'TTS_NOT_AVAILABLE', available: false },
+        { status: 503 }
+      );
+    }
+
     const body = await req.json();
     const parsed = requestSchema.safeParse(body);
 

@@ -75,6 +75,10 @@ export async function addToSyncQueue(
   return id;
 }
 
+export async function queueMutation(type: SyncItemType, payload: unknown): Promise<string> {
+  return addToSyncQueue(type, 'create', payload);
+}
+
 export async function getSyncQueue(): Promise<SyncQueueItem[]> {
   const db = await getDB();
   return db.getAllFromIndex('sync_queue', 'by-timestamp');

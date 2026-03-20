@@ -1,16 +1,23 @@
-import { anthropic, ANALYSIS_MODEL, SCAM_ANALYSIS_MAX_TOKENS, ensureApiKey } from '@/lib/ai/client';
+import { anthropic, ANALYSIS_MODEL, SCAM_ANALYSIS_MAX_TOKENS } from '@/lib/ai/client';
 import { buildScamDetectionPrompt } from '@/lib/ai/tools';
 import { createClient } from '@/lib/db/supabase';
+import { analyzeScamRisk } from '@/lib/ai/mock-scam-analyzer';
 import { z } from 'zod';
 
 const requestSchema = z.object({
   offer: z.string().min(10).max(5000),
 });
 
+/**
+ * Check if we're in mock mode (no real API key)
+ */
+function isMockMode(): boolean {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  return !apiKey || apiKey === '' || apiKey === 'mock' || apiKey === 'placeholder-key';
+}
+
 export async function POST(req: Request): Promise<Response> {
   try {
-    ensureApiKey();
-
     const supabase = createClient();
     const {
       data: { user },
@@ -41,6 +48,15 @@ export async function POST(req: Request): Promise<Response> {
 
     const country = userData?.country || 'NG';
 
+    // Check if we're in mock mode
+    if (isMockMode()) {
+      // Use rule-based scam analyzer
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const analysis = analyzeScamRisk(offer);
+      return Response.json(analysis);
+    }
+
+    // Real mode: Use Claude API
     const prompt = buildScamDetectionPrompt(offer, country);
 
     const response = await anthropic.messages.create({

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 interface ConsentStepProps {
   onNext: () => void;
@@ -11,11 +13,12 @@ interface ConsentStepProps {
 
 export function ConsentStep({ onNext, onBack, loading = false }: ConsentStepProps): JSX.Element {
   const t = useTranslations('onboarding');
-  const [consentData, setConsentData] = useState(false);
-  const [consentAI, setConsentAI] = useState(false);
+  const params = useParams();
+  const locale = params.locale as string;
+  const [consent, setConsent] = useState(false);
 
   function handleSubmit(): void {
-    if (consentData && consentAI) {
+    if (consent) {
       onNext();
     }
   }
@@ -39,75 +42,33 @@ export function ConsentStep({ onNext, onBack, loading = false }: ConsentStepProp
       <h2 className="mb-2 text-xl font-semibold text-neutral-900 dark:text-white">
         {t('consent_title')}
       </h2>
-      <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400">{t('consent_subtitle')}</p>
+      <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400">Before you continue, please review:</p>
 
       <div className="mb-6 space-y-4">
-        {/* Data processing consent */}
-        <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-neutral-200 p-4 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
-          <input
-            type="checkbox"
-            checked={consentData}
-            onChange={(e) => setConsentData(e.target.checked)}
-            className="mt-1 h-5 w-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
-          />
-          <div>
-            <p className="text-sm font-medium text-neutral-900 dark:text-white">
-              {t('consent_data_title')}
-            </p>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-              {t('consent_data_desc')}
-            </p>
-          </div>
-        </label>
-
-        {/* AI coaching consent */}
-        <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-neutral-200 p-4 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
-          <input
-            type="checkbox"
-            checked={consentAI}
-            onChange={(e) => setConsentAI(e.target.checked)}
-            className="mt-1 h-5 w-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 dark:border-neutral-600"
-          />
-          <div>
-            <p className="text-sm font-medium text-neutral-900 dark:text-white">
-              {t('consent_ai_title')}
-            </p>
-            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-              {t('consent_ai_desc')}
-            </p>
-          </div>
-        </label>
+        <ul className="list-disc space-y-2 pl-6 text-sm text-neutral-700 dark:text-neutral-300">
+          <li>Your conversations are private and encrypted</li>
+          <li>We never sell your data to anyone</li>
+          <li>You can delete your account and all your data anytime</li>
+        </ul>
       </div>
 
-      <div className="mb-6 rounded-lg bg-green-50 p-4 dark:bg-green-900/20">
-        <div className="flex items-start gap-3">
-          <svg
-            className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-            />
-          </svg>
-          <div>
-            <p className="text-sm font-medium text-green-800 dark:text-green-300">
-              {t('privacy_promise_title')}
-            </p>
-            <p className="mt-1 text-xs text-green-700 dark:text-green-400">
-              {t('privacy_promise_desc')}
-            </p>
-          </div>
-        </div>
-      </div>
+      <label className="mb-4 flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          className="h-4 w-4 rounded border-neutral-300 text-primary-600"
+        />
+        I understand and agree
+      </label>
+
+      <Link href={`/${locale}/privacy`} target="_blank" className="mb-6 inline-block text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400">
+        View full privacy policy
+      </Link>
 
       <button
         onClick={handleSubmit}
-        disabled={!consentData || !consentAI || loading}
+        disabled={!consent || loading}
         className="tap-target flex w-full items-center justify-center rounded-lg bg-primary-500 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? (

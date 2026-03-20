@@ -408,9 +408,11 @@ export interface OnboardingFormData {
   language: SupportedLanguage;
   country: SupportedCountry;
   name: string;
+  avatar: string;
   literacy_level: LiteracyLevel;
   primary_goal: string;
   has_bank_account: boolean;
+  assessment_answers: Record<string, string>;
   consent_data_processing: boolean;
   consent_ai_coaching: boolean;
 }

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 interface OTPInputProps {
   onSubmit: (otp: string) => void;
   onResend: () => void;
+  onExpire?: () => void;
   loading?: boolean;
   length?: number;
 }
@@ -13,6 +14,7 @@ interface OTPInputProps {
 export function OTPInput({
   onSubmit,
   onResend,
+  onExpire,
   loading = false,
   length = 6,
 }: OTPInputProps): JSX.Element {
@@ -20,6 +22,8 @@ export function OTPInput({
   const [otp, setOtp] = useState<string[]>(Array(length).fill(''));
   const [canResend, setCanResend] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const [expiresIn, setExpiresIn] = useState(600);
+  const [expired, setExpired] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -35,7 +39,21 @@ export function OTPInput({
     return undefined;
   }, [countdown]);
 
+  useEffect(() => {
+    if (expired) return undefined;
+
+    if (expiresIn > 0) {
+      const timer = setTimeout(() => setExpiresIn((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    setExpired(true);
+    onExpire?.();
+    return undefined;
+  }, [expiresIn, expired, onExpire]);
+
   function handleChange(index: number, value: string): void {
+    if (expired) return;
     if (!/^\d*$/.test(value)) return;
 
     const newOtp = [...otp];
@@ -79,13 +97,22 @@ export function OTPInput({
     if (!canResend) return;
     setCanResend(false);
     setCountdown(60);
+    setExpiresIn(600);
+    setExpired(false);
     setOtp(Array(length).fill(''));
     inputRefs.current[0]?.focus();
     onResend();
   }
 
+  const minutes = Math.floor(expiresIn / 60);
+  const seconds = expiresIn % 60;
+
   return (
     <div className="space-y-4">
+      <p className="text-center text-xs text-neutral-500 dark:text-neutral-400">
+        {expired ? 'Code expired' : `Code expires in ${minutes}:${seconds.toString().padStart(2, '0')}`}
+      </p>
+
       <div className="flex justify-center gap-2">
         {otp.map((digit, index) => (
           <input
@@ -100,7 +127,7 @@ export function OTPInput({
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             onPaste={handlePaste}
-            disabled={loading}
+            disabled={loading || expired}
             className="h-14 w-12 rounded-lg border-2 border-neutral-300 bg-white text-center text-2xl font-semibold text-neutral-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 disabled:opacity-50 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white"
           />
         ))}
