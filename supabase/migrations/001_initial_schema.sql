@@ -2,13 +2,13 @@
 -- Migration: 001_initial_schema.sql
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ===========================================
 -- Users Table
 -- ===========================================
 CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   phone VARCHAR(20) UNIQUE NOT NULL,
   name VARCHAR(100),
   language VARCHAR(5) NOT NULL DEFAULT 'en',
@@ -28,7 +28,7 @@ CREATE TABLE users (
 -- Conversations Table
 -- ===========================================
 CREATE TABLE conversations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title VARCHAR(255),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -42,7 +42,7 @@ CREATE INDEX idx_conversations_updated_at ON conversations(updated_at DESC);
 -- Messages Table
 -- ===========================================
 CREATE TABLE messages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
   role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'assistant')),
   content TEXT NOT NULL,
@@ -58,7 +58,7 @@ CREATE INDEX idx_messages_created_at ON messages(created_at);
 -- Learning Modules Table
 -- ===========================================
 CREATE TABLE learning_modules (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug VARCHAR(100) UNIQUE NOT NULL,
   title_key VARCHAR(255) NOT NULL,
   description_key VARCHAR(255) NOT NULL,
@@ -76,7 +76,7 @@ CREATE INDEX idx_learning_modules_order ON learning_modules(order_index);
 -- Lessons Table
 -- ===========================================
 CREATE TABLE lessons (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   module_id UUID NOT NULL REFERENCES learning_modules(id) ON DELETE CASCADE,
   slug VARCHAR(100) NOT NULL,
   title_key VARCHAR(255) NOT NULL,
@@ -92,7 +92,7 @@ CREATE INDEX idx_lessons_module_id ON lessons(module_id);
 -- Lesson Content Table (multilingual)
 -- ===========================================
 CREATE TABLE lesson_content (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
   language VARCHAR(5) NOT NULL,
   title VARCHAR(255) NOT NULL,
@@ -108,7 +108,7 @@ CREATE INDEX idx_lesson_content_lesson_language ON lesson_content(lesson_id, lan
 -- Quizzes Table
 -- ===========================================
 CREATE TABLE quizzes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   lesson_id UUID UNIQUE NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
   questions JSONB NOT NULL DEFAULT '[]',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -118,7 +118,7 @@ CREATE TABLE quizzes (
 -- User Progress Table
 -- ===========================================
 CREATE TABLE user_progress (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
   completed BOOLEAN NOT NULL DEFAULT false,
@@ -135,7 +135,7 @@ CREATE INDEX idx_user_progress_completed ON user_progress(user_id, completed);
 -- Badges Table
 -- ===========================================
 CREATE TABLE badges (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug VARCHAR(50) UNIQUE NOT NULL,
   name_key VARCHAR(255) NOT NULL,
   description_key VARCHAR(255) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE badges (
 -- User Badges Table
 -- ===========================================
 CREATE TABLE user_badges (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   badge_id UUID NOT NULL REFERENCES badges(id) ON DELETE CASCADE,
   earned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -160,7 +160,7 @@ CREATE INDEX idx_user_badges_user_id ON user_badges(user_id);
 -- Financial Entries Table
 -- ===========================================
 CREATE TABLE financial_entries (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   type VARCHAR(10) NOT NULL CHECK (type IN ('income', 'expense')),
   amount DECIMAL(12, 2) NOT NULL CHECK (amount > 0),
@@ -180,7 +180,7 @@ CREATE INDEX idx_financial_entries_type ON financial_entries(user_id, type);
 -- Savings Goals Table
 -- ===========================================
 CREATE TABLE savings_goals (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   target_amount DECIMAL(12, 2) NOT NULL CHECK (target_amount > 0),
@@ -198,7 +198,7 @@ CREATE INDEX idx_savings_goals_user_id ON savings_goals(user_id);
 -- Institutions Table
 -- ===========================================
 CREATE TABLE institutions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   type VARCHAR(20) NOT NULL CHECK (type IN ('microfinance', 'bank', 'mobile_money', 'ngo', 'government')),
   country_code VARCHAR(2) NOT NULL,
@@ -221,7 +221,7 @@ CREATE INDEX idx_institutions_type ON institutions(type);
 -- Remittance Providers Table
 -- ===========================================
 CREATE TABLE remittance_providers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   send_countries TEXT[] NOT NULL,
   receive_countries TEXT[] NOT NULL,
