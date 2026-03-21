@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "regions": ["sin1", "bom1", "gru1"],
+  "regions": ["bom1"],
   "headers": [
     {
       "source": "/(.*)",
