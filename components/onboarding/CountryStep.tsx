@@ -13,31 +13,26 @@ interface CountryStepProps {
 const COUNTRIES: { code: SupportedCountry; name: string; flag: string }[] = [
   { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
   { code: 'KE', name: 'Kenya', flag: '🇰🇪' },
+  { code: 'TZ', name: 'Tanzania', flag: '🇹🇿' },
+  { code: 'UG', name: 'Uganda', flag: '🇺🇬' },
+  { code: 'GH', name: 'Ghana', flag: '🇬🇭' },
   { code: 'IN', name: 'India', flag: '🇮🇳' },
   { code: 'BD', name: 'Bangladesh', flag: '🇧🇩' },
+  { code: 'PK', name: 'Pakistan', flag: '🇵🇰' },
   { code: 'PH', name: 'Philippines', flag: '🇵🇭' },
-  { code: 'GH', name: 'Ghana', flag: '🇬🇭' },
-  { code: 'ET', name: 'Ethiopia', flag: '🇪🇹' },
-  { code: 'TZ', name: 'Tanzania', flag: '🇹🇿' },
-  { code: 'PE', name: 'Peru', flag: '🇵🇪' },
-  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
   { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
   { code: 'VN', name: 'Vietnam', flag: '🇻🇳' },
-  { code: 'ZA', name: 'South Africa', flag: '🇿🇦' },
-  { code: 'UG', name: 'Uganda', flag: '🇺🇬' },
-  { code: 'PK', name: 'Pakistan', flag: '🇵🇰' },
   { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
+  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
+  { code: 'PE', name: 'Peru', flag: '🇵🇪' },
   { code: 'CO', name: 'Colombia', flag: '🇨🇴' },
+  { code: 'ET', name: 'Ethiopia', flag: '🇪🇹' },
+  { code: 'ZA', name: 'South Africa', flag: '🇿🇦' },
 ];
 
 export function CountryStep({ defaultValue, onNext, onBack }: CountryStepProps): JSX.Element {
   const t = useTranslations('onboarding');
   const [selected, setSelected] = useState<SupportedCountry | undefined>(defaultValue);
-  const [query, setQuery] = useState('');
-
-  const filtered = COUNTRIES.filter((country) =>
-    country.name.toLowerCase().includes(query.toLowerCase())
-  );
 
   return (
     <div>
@@ -58,16 +53,8 @@ export function CountryStep({ defaultValue, onNext, onBack }: CountryStepProps):
         {t('country_subtitle')}
       </p>
 
-      <input
-        type="text"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder="Search country"
-        className="mb-4 h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-800 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100"
-      />
-
       <div className="mb-6 max-h-64 space-y-2 overflow-y-auto">
-        {filtered.map((country) => (
+        {COUNTRIES.map((country) => (
           <button
             key={country.code}
             onClick={() => setSelected(country.code)}

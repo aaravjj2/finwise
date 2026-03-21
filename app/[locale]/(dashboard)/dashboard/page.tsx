@@ -6,14 +6,6 @@ import { GoalCard } from '@/components/dashboard/GoalCard';
 import { AddEntryModal } from '@/components/dashboard/AddEntryModal';
 import type { FinancialEntry, SavingsGoal } from '@/types';
 
-interface UserDashboardData {
-  monthlySavings: number;
-  monthlyIncome: number;
-  hasActiveSavingsGoal: boolean;
-  entriesThisMonth: number;
-  lessonsCompleted: number;
-}
-
 export default async function DashboardPage(): Promise<JSX.Element> {
   const supabase = createClient();
   const {
@@ -50,12 +42,6 @@ export default async function DashboardPage(): Promise<JSX.Element> {
     .eq('id', user.id)
     .single();
 
-  const { count: lessonsCompletedCount } = await supabase
-    .from('user_progress')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .eq('completed', true);
-
   const currency = userData?.currency || 'USD';
 
   // Calculate totals
@@ -68,20 +54,14 @@ export default async function DashboardPage(): Promise<JSX.Element> {
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   const savings = totalIncome - totalExpenses;
-  const scoreData: UserDashboardData = {
-    monthlySavings: Math.max(0, savings),
-    monthlyIncome: totalIncome,
-    hasActiveSavingsGoal: (goals?.length || 0) > 0,
-    entriesThisMonth: entries?.length || 0,
-    lessonsCompleted: lessonsCompletedCount || 0,
-  };
+  const savingsRate = totalIncome > 0 ? (savings / totalIncome) * 100 : 0;
 
-  const { score: healthScore, breakdown } = calculateScore(scoreData);
+  // Calculate health score
+  const healthScore = calculateHealthScore(savingsRate, goals?.length || 0);
 
   return (
     <DashboardContent
       healthScore={healthScore}
-      scoreBreakdown={breakdown}
       totalIncome={totalIncome}
       totalExpenses={totalExpenses}
       savings={savings}
@@ -92,30 +72,17 @@ export default async function DashboardPage(): Promise<JSX.Element> {
   );
 }
 
-function calculateScore(data: UserDashboardData): {
-  score: number;
-  breakdown: { savings: number; goals: number; logging: number; lessons: number };
-} {
-  const savingsRate = data.monthlySavings / Math.max(data.monthlyIncome, 1);
-  const savingsPoints = Math.min(30, Math.round(savingsRate * 100));
-  const goalsPoints = data.hasActiveSavingsGoal ? 20 : 0;
-  const loggingPoints = Math.min(20, data.entriesThisMonth * 2);
-  const lessonsPoints = Math.min(30, data.lessonsCompleted * 5);
-
-  return {
-    score: Math.min(100, savingsPoints + goalsPoints + loggingPoints + lessonsPoints),
-    breakdown: {
-      savings: savingsPoints,
-      goals: goalsPoints,
-      logging: loggingPoints,
-      lessons: lessonsPoints,
-    },
-  };
+function calculateHealthScore(savingsRate: number, goalCount: number): number {
+  let score = 0;
+  score += Math.min(30, savingsRate);
+  score += goalCount > 0 ? 20 : 0;
+  score += Math.min(30, savingsRate > 0 ? 30 : 0);
+  score += 20;
+  return Math.round(score);
 }
 
 function DashboardContent({
   healthScore,
-  scoreBreakdown,
   totalIncome,
   totalExpenses,
   savings,
@@ -124,7 +91,6 @@ function DashboardContent({
   recentEntries,
 }: {
   healthScore: number;
-  scoreBreakdown: { savings: number; goals: number; logging: number; lessons: number };
   totalIncome: number;
   totalExpenses: number;
   savings: number;
@@ -142,7 +108,7 @@ function DashboardContent({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <HealthScore score={healthScore} breakdown={scoreBreakdown} />
+        <HealthScore score={healthScore} />
         <MonthlySummary
           income={totalIncome}
           expenses={totalExpenses}

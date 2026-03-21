@@ -1,94 +1,39 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 interface AssessmentStepProps {
   defaultValues?: {
     literacy_level?: number;
     has_bank_account?: boolean;
-    assessment_answers?: Record<string, string>;
   };
-  onNext: (data: {
-    literacy_level: number;
-    has_bank_account: boolean;
-    primary_goal: string;
-    assessment_answers: Record<string, string>;
-  }) => void;
+  onNext: (data: { literacy_level: number; has_bank_account: boolean }) => void;
   onBack: () => void;
 }
 
+const LITERACY_LEVELS = [
+  { level: 1, labelKey: 'literacy_1', descKey: 'literacy_1_desc' },
+  { level: 2, labelKey: 'literacy_2', descKey: 'literacy_2_desc' },
+  { level: 3, labelKey: 'literacy_3', descKey: 'literacy_3_desc' },
+  { level: 4, labelKey: 'literacy_4', descKey: 'literacy_4_desc' },
+  { level: 5, labelKey: 'literacy_5', descKey: 'literacy_5_desc' },
+];
+
 export function AssessmentStep({ defaultValues, onNext, onBack }: AssessmentStepProps): JSX.Element {
   const t = useTranslations('onboarding');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>(defaultValues?.assessment_answers || {});
-
-  const questions = useMemo(
-    () => [
-      {
-        key: 'bank_account',
-        prompt: 'Do you currently have a bank account?',
-        options: ['Yes', 'No', 'I have mobile money'],
-      },
-      {
-        key: 'saving_method',
-        prompt: 'How do you usually save money?',
-        options: ['Bank', 'Cash at home', 'Mobile money', "I don't save yet"],
-      },
-      {
-        key: 'loan_history',
-        prompt: 'Have you ever taken a loan?',
-        options: ['Yes, from a bank', 'Yes, from family or informal', 'No, never'],
-      },
-      {
-        key: 'remittance',
-        prompt: 'Do you send or receive money to family in another area?',
-        options: ['Yes, often', 'Sometimes', 'No'],
-      },
-      {
-        key: 'main_goal',
-        prompt: 'What is your main financial goal right now?',
-        options: [
-          'Save more money',
-          'Borrow safely',
-          'Understand money better',
-          'Start a business',
-          'Protect what I have',
-        ],
-      },
-    ],
-    []
+  const [literacyLevel, setLiteracyLevel] = useState(defaultValues?.literacy_level || 1);
+  const [hasBankAccount, setHasBankAccount] = useState<boolean | undefined>(
+    defaultValues?.has_bank_account
   );
 
-  const question = questions[currentQuestion];
-  const progress = Math.round(((currentQuestion + 1) / questions.length) * 100);
-
-  function toLiteracyLevel(nextAnswers: Record<string, string>): number {
-    let score = 1;
-    if ((nextAnswers.bank_account || '').includes('Yes')) score += 1;
-    if ((nextAnswers.saving_method || '').includes('Bank') || (nextAnswers.saving_method || '').includes('Mobile')) score += 1;
-    if ((nextAnswers.loan_history || '').includes('bank')) score += 1;
-    if ((nextAnswers.main_goal || '').includes('Understand')) score += 1;
-    return Math.max(1, Math.min(5, score));
-  }
-
-  function handleSelect(option: string): void {
-    if (!question) return;
-    const nextAnswers = { ...answers, [question.key]: option };
-    setAnswers(nextAnswers);
-
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion((prev) => prev + 1);
-      return;
+  function handleSubmit(): void {
+    if (hasBankAccount !== undefined) {
+      onNext({
+        literacy_level: literacyLevel,
+        has_bank_account: hasBankAccount,
+      });
     }
-
-    const literacy = toLiteracyLevel(nextAnswers);
-    onNext({
-      literacy_level: literacy,
-      has_bank_account: (nextAnswers.bank_account || '').startsWith('Yes'),
-      primary_goal: nextAnswers.main_goal || 'Understand money better',
-      assessment_answers: nextAnswers,
-    });
   }
 
   return (
@@ -110,33 +55,86 @@ export function AssessmentStep({ defaultValues, onNext, onBack }: AssessmentStep
         {t('assessment_subtitle')}
       </p>
 
+      {/* Literacy Level */}
       <div className="mb-6">
-        <div className="mb-2 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
-          <span>
-            Question {currentQuestion + 1} of {questions.length}
-          </span>
-          <span>{progress}%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-          <div className="h-full rounded-full bg-primary-500 transition-all duration-300" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <p className="mb-3 text-sm font-medium text-neutral-800 dark:text-neutral-200">{question?.prompt || ''}</p>
+        <label className="mb-3 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          {t('literacy_question')}
+        </label>
         <div className="space-y-2">
-          {(question?.options || []).map((option) => (
+          {LITERACY_LEVELS.map((level) => (
             <button
-              key={option}
-              type="button"
-              onClick={() => handleSelect(option)}
-              className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-left text-sm text-neutral-800 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:border-primary-600 dark:hover:bg-primary-900/20"
+              key={level.level}
+              onClick={() => setLiteracyLevel(level.level)}
+              className={`flex w-full items-start gap-3 rounded-lg border-2 p-3 text-left transition-colors ${
+                literacyLevel === level.level
+                  ? 'border-primary-500 bg-primary-50 dark:border-primary-400 dark:bg-primary-900/20'
+                  : 'border-neutral-200 hover:border-neutral-300 dark:border-neutral-600 dark:hover:border-neutral-500'
+              }`}
             >
-              {option}
+              <div
+                className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                  literacyLevel === level.level
+                    ? 'border-primary-500 bg-primary-500'
+                    : 'border-neutral-300 dark:border-neutral-500'
+                }`}
+              >
+                {literacyLevel === level.level && (
+                  <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-medium text-neutral-900 dark:text-white">
+                  {t(level.labelKey)}
+                </p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">{t(level.descKey)}</p>
+              </div>
             </button>
           ))}
         </div>
       </div>
+
+      {/* Bank Account */}
+      <div className="mb-6">
+        <label className="mb-3 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          {t('bank_account_question')}
+        </label>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setHasBankAccount(true)}
+            className={`flex-1 rounded-lg border-2 p-3 text-sm font-medium transition-colors ${
+              hasBankAccount === true
+                ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-400 dark:bg-primary-900/20 dark:text-primary-400'
+                : 'border-neutral-200 text-neutral-700 hover:border-neutral-300 dark:border-neutral-600 dark:text-neutral-300 dark:hover:border-neutral-500'
+            }`}
+          >
+            {t('yes')}
+          </button>
+          <button
+            onClick={() => setHasBankAccount(false)}
+            className={`flex-1 rounded-lg border-2 p-3 text-sm font-medium transition-colors ${
+              hasBankAccount === false
+                ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-400 dark:bg-primary-900/20 dark:text-primary-400'
+                : 'border-neutral-200 text-neutral-700 hover:border-neutral-300 dark:border-neutral-600 dark:text-neutral-300 dark:hover:border-neutral-500'
+            }`}
+          >
+            {t('no')}
+          </button>
+        </div>
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        disabled={hasBankAccount === undefined}
+        className="tap-target w-full rounded-lg bg-primary-500 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {t('continue')}
+      </button>
     </div>
   );
 }

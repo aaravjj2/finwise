@@ -58,12 +58,12 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps): JSX.Ele
       {/* Voice Input */}
       <VoiceInput
         onTranscript={handleVoiceTranscript}
-        onInterimTranscript={setLiveTranscript}
         disabled={disabled}
       />
 
       <div className="relative flex-1">
         <textarea
+          data-testid="chat-input"
           ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -77,6 +77,7 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps): JSX.Ele
       </div>
 
       <button
+        data-testid="send-button"
         onClick={handleSubmit}
         disabled={!message.trim() || disabled}
         className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"

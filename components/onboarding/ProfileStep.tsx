@@ -6,24 +6,31 @@ import { useTranslations } from 'next-intl';
 interface ProfileStepProps {
   defaultValues?: {
     name?: string;
-    avatar?: string;
+    primary_goal?: string;
   };
-  onNext: (data: { name: string; avatar: string }) => void;
+  onNext: (data: { name: string; primary_goal: string }) => void;
   onBack: () => void;
 }
 
-const AVATARS = ['👤', '👨‍🌾', '👩‍💼', '👨‍🏭', '👩‍🍳', '👨‍🔧', '👩‍🎓', '👴'];
+const GOALS = [
+  { key: 'save_more', emoji: '💰' },
+  { key: 'pay_debt', emoji: '💳' },
+  { key: 'start_business', emoji: '🏪' },
+  { key: 'send_money', emoji: '💸' },
+  { key: 'budget_better', emoji: '📊' },
+  { key: 'learn_basics', emoji: '📚' },
+];
 
 export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps): JSX.Element {
   const t = useTranslations('onboarding');
   const [name, setName] = useState(defaultValues?.name || '');
-  const [avatar, setAvatar] = useState(defaultValues?.avatar || AVATARS[0]!);
+  const [goal, setGoal] = useState(defaultValues?.primary_goal || '');
 
   function handleSubmit(): void {
-    if (name.trim() && avatar) {
+    if (name.trim() && goal) {
       onNext({
-        name: name.trim().split(' ')[0] || name.trim(),
-        avatar,
+        name: name.trim(),
+        primary_goal: goal,
       });
     }
   }
@@ -50,35 +57,38 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
           htmlFor="name"
           className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300"
         >
-          What should we call you?
+          {t('name_label')}
         </label>
         <input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="First name"
+          placeholder={t('name_placeholder')}
           className="h-12 w-full rounded-lg border border-neutral-300 bg-white px-4 text-neutral-900 placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white"
         />
       </div>
 
-      {/* Avatar selection */}
+      {/* Goal selection */}
       <div className="mb-6">
         <label className="mb-3 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-          Choose an avatar
+          {t('goal_question')}
         </label>
-        <div className="grid grid-cols-4 gap-2">
-          {AVATARS.map((item) => (
+        <div className="grid grid-cols-2 gap-2">
+          {GOALS.map((g) => (
             <button
-              key={item}
-              onClick={() => setAvatar(item)}
+              key={g.key}
+              onClick={() => setGoal(g.key)}
               className={`flex items-center gap-2 rounded-lg border-2 p-3 text-left transition-colors ${
-                avatar === item
+                goal === g.key
                   ? 'border-primary-500 bg-primary-50 dark:border-primary-400 dark:bg-primary-900/20'
                   : 'border-neutral-200 hover:border-neutral-300 dark:border-neutral-600 dark:hover:border-neutral-500'
               }`}
             >
-              <span className="mx-auto text-2xl">{item}</span>
+              <span className="text-xl">{g.emoji}</span>
+              <span className="text-sm font-medium text-neutral-900 dark:text-white">
+                {t(`goal_${g.key}`)}
+              </span>
             </button>
           ))}
         </div>
@@ -86,7 +96,7 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
 
       <button
         onClick={handleSubmit}
-        disabled={!name.trim() || !avatar}
+        disabled={!name.trim() || !goal}
         className="tap-target w-full rounded-lg bg-primary-500 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {t('continue')}

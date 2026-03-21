@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateLoanPayment, calculateAPR, assessLoanFairness } from '@/lib/loan-calculator';
+import { calculateLoanPayment, calculateAPR, assessLoanFairness, convertRateToAPR } from '@/lib/loan-calculator';
 
 describe('Loan Calculator', () => {
   describe('calculateLoanPayment', () => {
@@ -53,6 +53,20 @@ describe('Loan Calculator', () => {
 
       // 10% monthly is very high - predatory
       expect(apr).toBeGreaterThan(100);
+    });
+  });
+
+  describe('convertRateToAPR', () => {
+    it('converts weekly rates to annual percentage', () => {
+      expect(convertRateToAPR(5, 'week')).toBe(260);
+    });
+
+    it('converts monthly rates to annual percentage', () => {
+      expect(convertRateToAPR(2, 'month')).toBe(24);
+    });
+
+    it('converts daily rates to annual percentage', () => {
+      expect(convertRateToAPR(1, 'day')).toBe(365);
     });
   });
 

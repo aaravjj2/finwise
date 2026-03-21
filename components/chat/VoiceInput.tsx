@@ -38,15 +38,10 @@ interface SpeechRecognitionInstance {
 
 interface VoiceInputProps {
   onTranscript: (text: string) => void;
-  onInterimTranscript?: (text: string) => void;
   disabled?: boolean;
 }
 
-export function VoiceInput({
-  onTranscript,
-  onInterimTranscript,
-  disabled = false,
-}: VoiceInputProps): JSX.Element {
+export function VoiceInput({ onTranscript, disabled = false }: VoiceInputProps): JSX.Element {
   const t = useTranslations('chat');
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
@@ -73,22 +68,17 @@ export function VoiceInput({
         .map((result: SpeechRecognitionResult) => result[0]?.transcript)
         .join('');
 
-      onInterimTranscript?.(transcript);
-
       if (event.results[0]?.isFinal) {
         onTranscript(transcript);
-        onInterimTranscript?.('');
         setIsListening(false);
       }
     };
 
     recognition.onerror = () => {
-      onInterimTranscript?.('');
       setIsListening(false);
     };
 
     recognition.onend = () => {
-      onInterimTranscript?.('');
       setIsListening(false);
     };
 
@@ -97,7 +87,7 @@ export function VoiceInput({
     return () => {
       recognition.abort();
     };
-  }, [onTranscript, onInterimTranscript]);
+  }, [onTranscript]);
 
   const toggleListening = useCallback(() => {
     if (!recognitionRef.current) return;

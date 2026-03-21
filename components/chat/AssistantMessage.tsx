@@ -15,7 +15,7 @@ export function AssistantMessage({ message, isStreaming = false }: AssistantMess
   const relativeTime = formatRelativeTime(message.created_at);
 
   return (
-    <div className="flex gap-3">
+    <div data-testid="assistant-message" className="flex gap-3">
       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-semibold text-white">
         M
       </div>

@@ -51,18 +51,5 @@ export default async function ChatConversationPage({
     card_data: m.card_data,
   }));
 
-  const { data: conversations } = await supabase
-    .from('conversations')
-    .select('id,title,updated_at')
-    .eq('user_id', user.id)
-    .order('updated_at', { ascending: false })
-    .limit(30);
-
-  return (
-    <ChatContainer
-      conversationId={params.id}
-      initialMessages={initialMessages}
-      conversations={conversations || []}
-    />
-  );
+  return <ChatContainer conversationId={params.id} initialMessages={initialMessages} />;
 }

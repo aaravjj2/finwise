@@ -5,16 +5,14 @@ import { useTranslations } from 'next-intl';
 
 const COUNTRY_CODES = [
   { code: '+234', country: 'NG', flag: '🇳🇬', name: 'Nigeria' },
-  { code: '+91', country: 'IN', flag: '🇮🇳', name: 'India' },
-  { code: '+880', country: 'BD', flag: '🇧🇩', name: 'Bangladesh' },
-  { code: '+63', country: 'PH', flag: '🇵🇭', name: 'Philippines' },
   { code: '+254', country: 'KE', flag: '🇰🇪', name: 'Kenya' },
-  { code: '+1', country: 'US', flag: '🇺🇸', name: 'United States' },
-  { code: '+44', country: 'GB', flag: '🇬🇧', name: 'United Kingdom' },
   { code: '+255', country: 'TZ', flag: '🇹🇿', name: 'Tanzania' },
   { code: '+256', country: 'UG', flag: '🇺🇬', name: 'Uganda' },
   { code: '+233', country: 'GH', flag: '🇬🇭', name: 'Ghana' },
+  { code: '+91', country: 'IN', flag: '🇮🇳', name: 'India' },
+  { code: '+880', country: 'BD', flag: '🇧🇩', name: 'Bangladesh' },
   { code: '+92', country: 'PK', flag: '🇵🇰', name: 'Pakistan' },
+  { code: '+63', country: 'PH', flag: '🇵🇭', name: 'Philippines' },
   { code: '+62', country: 'ID', flag: '🇮🇩', name: 'Indonesia' },
   { code: '+84', country: 'VN', flag: '🇻🇳', name: 'Vietnam' },
   { code: '+52', country: 'MX', flag: '🇲🇽', name: 'Mexico' },
@@ -28,10 +26,9 @@ const COUNTRY_CODES = [
 interface PhoneInputProps {
   onSubmit: (phone: string) => void;
   loading?: boolean;
-  submitLabel?: string;
 }
 
-export function PhoneInput({ onSubmit, loading = false, submitLabel }: PhoneInputProps): JSX.Element {
+export function PhoneInput({ onSubmit, loading = false }: PhoneInputProps): JSX.Element {
   const t = useTranslations('auth');
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]!);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -114,7 +111,7 @@ export function PhoneInput({ onSubmit, loading = false, submitLabel }: PhoneInpu
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         ) : (
-          submitLabel || t('continue')
+          t('continue')
         )}
       </button>
     </form>

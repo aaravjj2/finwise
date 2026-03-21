@@ -48,9 +48,7 @@ export function isRtl(locale: Locale): boolean {
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const locale = await requestLocale;
-  const resolvedLocale = locale && locales.includes(locale as Locale)
-    ? (locale as Locale)
-    : defaultLocale;
+  const resolvedLocale = locale && locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale;
 
   return {
     locale: resolvedLocale,

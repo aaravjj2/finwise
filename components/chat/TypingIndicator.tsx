@@ -2,7 +2,7 @@
 
 export function TypingIndicator(): JSX.Element {
   return (
-    <div className="flex gap-3">
+    <div data-testid="typing-indicator" className="flex gap-3">
       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm dark:bg-primary-900/30">
         ✨
       </div>

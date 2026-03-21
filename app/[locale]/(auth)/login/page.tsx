@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { PhoneInput } from '@/components/auth/PhoneInput';
 import { OTPInput } from '@/components/auth/OTPInput';
 import { createClient } from '@/lib/db/supabase-browser';
+import { createDemoSession } from '@/lib/auth/demo-session';
 
 type AuthStep = 'phone' | 'otp';
 
@@ -112,10 +113,7 @@ export default function LoginPage(): JSX.Element {
     setDemoLoading(true);
     setError(null);
 
-    const demoSessionId =
-      typeof crypto !== 'undefined' && 'randomUUID' in crypto
-        ? crypto.randomUUID()
-        : `demo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const demoUser = createDemoSession(locale || 'en', 'NG');
 
     // Set demo mode cookie - this will be checked by middleware
     document.cookie = 'finwise_demo_mode=true; path=/; max-age=86400; SameSite=Lax';
@@ -123,13 +121,13 @@ export default function LoginPage(): JSX.Element {
     // Also set in localStorage for client-side components
     if (typeof window !== 'undefined') {
       localStorage.setItem('finwise_demo_mode', 'true');
-      localStorage.setItem('finwise_demo_session_id', demoSessionId);
+      localStorage.setItem('finwise_demo_session_id', demoUser.id);
       localStorage.setItem('finwise_demo_user', JSON.stringify({
-        id: demoSessionId,
-        name: 'Demo User',
+        id: demoUser.id,
+        name: demoUser.name,
         phone: '+1234567890',
-        language: locale || 'en',
-        country: 'NG',
+        language: demoUser.language,
+        country: demoUser.country,
         literacy_level: 3,
         primary_goal: 'savings',
         has_bank_account: false,
@@ -159,7 +157,7 @@ export default function LoginPage(): JSX.Element {
           <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400">
             Free financial guidance for everyone
           </p>
-          <PhoneInput onSubmit={handlePhoneSubmit} loading={loading} submitLabel="Send code" />
+          <PhoneInput onSubmit={handlePhoneSubmit} loading={loading} />
 
           {/* Demo Mode Button */}
           <div className="mt-6 border-t border-neutral-200 pt-6 dark:border-neutral-700">
@@ -209,10 +207,6 @@ export default function LoginPage(): JSX.Element {
             onSubmit={handleOTPSubmit}
             loading={loading}
             onResend={() => handlePhoneSubmit(phone)}
-            onExpire={() => {
-              setOtpExpired(true);
-              setError('Your OTP has expired. Please resend and try again.');
-            }}
           />
         </>
       )}

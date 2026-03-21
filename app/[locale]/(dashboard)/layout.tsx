@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { Header } from '@/components/layout/Header';
+import { OfflineBanner } from '@/components/layout/OfflineBanner';
 
 export default function DashboardLayout({ children }: { children: ReactNode }): JSX.Element {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }): 
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
+      <OfflineBanner />
       {/* Desktop Sidebar */}
       <Sidebar className="hidden lg:flex" />
 

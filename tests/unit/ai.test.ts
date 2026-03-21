@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { buildSystemPrompt } from '@/lib/ai/system-prompt';
 import { buildMessageHistory, parseCardData } from '@/lib/ai/context-builder';
 import { buildScamDetectionPrompt } from '@/lib/ai/tools';

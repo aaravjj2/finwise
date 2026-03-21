@@ -14,6 +14,7 @@ const navItems = [
   { href: '/learn', icon: 'learn', labelKey: 'learn' },
   { href: '/dashboard', icon: 'dashboard', labelKey: 'dashboard' },
   { href: '/resources', icon: 'resources', labelKey: 'resources' },
+  { href: '/tools/calculator', icon: 'tools', labelKey: 'tools' },
   { href: '/settings', icon: 'settings', labelKey: 'settings' },
 ];
 
@@ -59,7 +60,7 @@ export function Sidebar({ className }: SidebarProps): JSX.Element {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
-  const locale = typeof params.locale === 'string' ? params.locale : 'en';
+  const locale = params.locale as string;
 
   return (
     <aside
@@ -78,12 +79,6 @@ export function Sidebar({ className }: SidebarProps): JSX.Element {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-4">
-        <Link
-          href={`/${locale}/chat`}
-          className="mb-3 flex items-center justify-center rounded-lg bg-primary-500 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-600"
-        >
-          New conversation
-        </Link>
         {navItems.map((item) => {
           const href = `/${locale}${item.href}`;
           const isActive = pathname.startsWith(href);

@@ -45,6 +45,19 @@ export function calculateAPR(monthlyRate: number): number {
   return effectiveAnnualRate * 100;
 }
 
+export function convertRateToAPR(rate: number, period: 'day' | 'week' | 'month' | 'year'): number {
+  if (period === 'year') {
+    return rate;
+  }
+  if (period === 'month') {
+    return rate * 12;
+  }
+  if (period === 'week') {
+    return rate * 52;
+  }
+  return rate * 365;
+}
+
 export function assessLoanFairness(apr: number, country: string): 'good' | 'fair' | 'expensive' | 'predatory' {
   // Regional fair rate benchmarks (approximate)
   const benchmarks: Record<string, number> = {

@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 export function Header(): JSX.Element {
   const t = useTranslations('common');
   const params = useParams();
-  const locale = typeof params.locale === 'string' ? params.locale : 'en';
+  const locale = params.locale as string;
 
   return (
     <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-sm safe-top dark:border-neutral-700 dark:bg-neutral-900/95 lg:hidden">

@@ -1,25 +1,17 @@
-import { test, expect, type Page } from '@playwright/test';
-
-async function enterDemoMode(page: Page): Promise<void> {
-  await page.goto('/en/login');
-  await page.getByRole('button', { name: /continue without account/i }).click();
-  await page.waitForURL('**/en/chat');
-}
+import { test, expect } from '@playwright/test';
 
 test.describe('Onboarding Flow', () => {
   test('should display login page by default', async ({ page }) => {
     await page.goto('/en/login');
 
-    await expect(page.getByText('Your financial coach, in your language')).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /phone/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'FinWise' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /phone number/i })).toBeVisible();
   });
 
-  test('should show language selector in onboarding', async ({ page }) => {
-    await enterDemoMode(page);
+  test('should redirect unauthenticated user from onboarding to login', async ({ page }) => {
     await page.goto('/en/onboarding');
 
-    // Check for language selection step
-    await expect(page.getByText('Choose your language')).toBeVisible();
+    await expect(page).toHaveURL(/\/en\/login/);
   });
 
   test('should have working phone input', async ({ page }) => {
@@ -46,19 +38,16 @@ test.describe('Onboarding Flow', () => {
 
 test.describe('Onboarding Steps', () => {
   test.beforeEach(async ({ page }) => {
-    await enterDemoMode(page);
     await page.goto('/en/onboarding');
   });
 
-  test('should have all 15 language options', async ({ page }) => {
-    // Check for major languages via card buttons.
-    await expect(page.getByRole('button', { name: /English/i }).first()).toBeVisible();
-    await expect(page.getByRole('button', { name: /हिन्दी/ }).first()).toBeVisible();
-    await expect(page.getByRole('button', { name: /Kiswahili/i }).first()).toBeVisible();
-    await expect(page.getByRole('button', { name: /Yoruba|Yorùbá/i }).first()).toBeVisible();
+  test('should keep onboarding behind authentication', async ({ page }) => {
+    await expect(page).toHaveURL(/\/en\/login/);
+    await expect(page.getByRole('button', { name: /continue without account/i })).toBeVisible();
   });
 
-  test('should show progress indicator', async ({ page }) => {
-    await expect(page.getByText(/Step 1 of/)).toBeVisible();
+  test('should provide demo-mode entry from login', async ({ page }) => {
+    await page.getByRole('button', { name: /continue without account/i }).click();
+    await expect(page).toHaveURL(/\/en\/chat/);
   });
 });

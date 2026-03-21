@@ -1,242 +1,129 @@
-/**
- * Mock scam analyzer for FinWise when no Anthropic API key is available.
- * Uses rule-based pattern matching to detect scam indicators.
- */
-
 export interface ScamAnalysisResult {
-  risk_level: 'low' | 'medium' | 'high' | 'very_high';
-  risk_score: number; // 0-100
-  red_flags: Array<{ flag: string; explanation: string }>;
-  legitimate_indicators: string[];
-  recommendation: string;
-  summary: string;
+  risk_level: 'low' | 'medium' | 'high' | 'very_high'
+  risk_score: number
+  red_flags: Array<{ flag: string; explanation: string }>
+  legitimate_indicators: string[]
+  recommendation: string
+  summary: string
 }
 
-interface RedFlag {
-  pattern: RegExp;
-  flag: string;
-  explanation: string;
-  score: number;
-}
-
-const RED_FLAG_PATTERNS: RedFlag[] = [
-  {
-    pattern: /guaranteed\s*(return|profit|income|earning)|no\s*risk|risk[\s-]*free/i,
-    flag: 'Guaranteed returns promised',
-    explanation: 'No legitimate investment can guarantee profits. All investments carry risk, and anyone promising otherwise is likely running a scam.',
-    score: 40
-  },
-  {
-    pattern: /(pay|fee|upfront|advance).{0,30}(loan|receive|get|money)|before\s*(you\s*)?(receive|get)/i,
-    flag: 'Upfront fee required',
-    explanation: 'Legitimate lenders NEVER require you to pay money upfront to receive a loan. This is the #1 sign of loan fraud.',
-    score: 50
-  },
-  {
-    pattern: /(\d{2,3})\s*%\s*(monthly|per\s*month|weekly|per\s*week)/i,
-    flag: 'Extremely high interest rate',
-    explanation: 'Monthly rates above 10% translate to over 120% APR, which is predatory lending. Legitimate microfinance typically charges 20-40% APR.',
-    score: 35
-  },
-  {
-    pattern: /limited\s*time|act\s*now|expires?\s*(soon|today|tomorrow)|urgent|immediately|don'?t\s*miss/i,
-    flag: 'High-pressure urgency tactics',
-    explanation: 'Legitimate financial offers don\'t pressure you to act immediately. Scammers create false urgency to prevent you from doing research.',
-    score: 20
-  },
-  {
-    pattern: /no\s*(physical\s*)?address|no\s*office|online\s*only|whatsapp\s*only/i,
-    flag: 'No verifiable business address',
-    explanation: 'Legitimate financial companies have physical addresses and are registered with regulators. Being "online only" or "WhatsApp only" is suspicious.',
-    score: 15
-  },
-  {
-    pattern: /send\s*(money|bitcoin|crypto)\s*to|wire\s*transfer|western\s*union\s*to/i,
-    flag: 'Unusual payment method requested',
-    explanation: 'Scammers often request untraceable payment methods like wire transfers or cryptocurrency. Legitimate companies use standard banking.',
-    score: 25
-  },
-  {
-    pattern: /double\s*your\s*money|multiply|(\d+)x\s*(return|profit)|forex\s*trading\s*guaranteed/i,
-    flag: 'Unrealistic profit claims',
-    explanation: 'Claims of doubling your money or guaranteed trading profits are classic scam language. Real investments don\'t promise specific returns.',
-    score: 45
-  },
-  {
-    pattern: /secret|exclusive|vip|selected|chosen|lucky\s*winner/i,
-    flag: 'Exclusive/secret opportunity language',
-    explanation: 'Scammers make you feel special to lower your guard. Legitimate opportunities don\'t need to be "secret" or "exclusive."',
-    score: 15
-  },
-  {
-    pattern: /no\s*(credit\s*)?check|bad\s*credit\s*ok|everyone\s*approved/i,
-    flag: 'No credit check claims',
-    explanation: 'While some legitimate microfinance serves those with limited credit history, promises of "no credit check" combined with other red flags suggest a scam.',
-    score: 10
-  },
-  {
-    pattern: /government\s*grant|free\s*money|stimulus|inheritance|lottery/i,
-    flag: 'Free money claims',
-    explanation: 'No one gives away free money. Government grant scams and fake inheritance notices are extremely common fraud tactics.',
-    score: 35
-  }
-];
-
-const LEGITIMATE_PATTERNS = [
-  {
-    pattern: /registered|licensed|regulated|central\s*bank|financial\s*authority/i,
-    indicator: 'Mentions regulatory registration'
-  },
-  {
-    pattern: /apr\s*\d+%|annual\s*percentage|interest\s*rate\s*clearly/i,
-    indicator: 'Clear interest rate disclosure'
-  },
-  {
-    pattern: /terms\s*and\s*conditions|contract|agreement|read\s*carefully/i,
-    indicator: 'Mentions formal documentation'
-  },
-  {
-    pattern: /customer\s*service|support\s*line|call\s*us|visit\s*our\s*branch/i,
-    indicator: 'Provides contact channels'
-  },
-  {
-    pattern: /collateral|credit\s*history|income\s*verification|employment/i,
-    indicator: 'Standard lending requirements mentioned'
-  }
-];
-
-function getRiskLevel(score: number): 'low' | 'medium' | 'high' | 'very_high' {
-  if (score <= 25) return 'low';
-  if (score <= 50) return 'medium';
-  if (score <= 75) return 'high';
-  return 'very_high';
-}
-
-function getRecommendation(riskLevel: string): string {
-  switch (riskLevel) {
-    case 'very_high':
-      return 'DO NOT proceed with this offer. This shows multiple signs of being a scam. Do not send any money or share personal information. Report this to your local financial regulator.';
-    case 'high':
-      return 'Be very cautious. This offer has several concerning signs. Before proceeding, verify the company with your country\'s financial regulator. Never pay upfront fees for a loan.';
-    case 'medium':
-      return 'Proceed with caution. While this might be legitimate, there are some concerning elements. Verify the company is registered and get everything in writing before agreeing to anything.';
-    case 'low':
-      return 'This appears relatively safe, but always verify independently. Check that the company is registered, understand all terms, and never feel pressured to make quick decisions.';
-    default:
-      return 'Always verify any financial offer independently before proceeding.';
-  }
-}
-
-function getSummary(riskLevel: string, flagCount: number): string {
-  switch (riskLevel) {
-    case 'very_high':
-      return `This offer shows ${flagCount} major red flags and is very likely a scam. Protect yourself by avoiding it completely.`;
-    case 'high':
-      return `This offer has ${flagCount} concerning indicators. There's a significant chance this is fraudulent or predatory.`;
-    case 'medium':
-      return `This offer has ${flagCount} points of concern. More investigation is recommended before proceeding.`;
-    case 'low':
-      return `This offer shows few warning signs. However, always verify independently and read all terms carefully.`;
-    default:
-      return `Analysis based on ${flagCount} identified factors.`;
-  }
-}
-
-/**
- * Analyze text for scam indicators using rule-based pattern matching.
- * Provides realistic analysis even without AI API access.
- *
- * @param text - The offer text to analyze
- * @returns ScamAnalysisResult with risk assessment
- */
 export function analyzeScamRisk(text: string): ScamAnalysisResult {
-  const normalizedText = text.toLowerCase();
-  let riskScore = 0;
-  const redFlags: Array<{ flag: string; explanation: string }> = [];
-  const legitimateIndicators: string[] = [];
+  const t = text.toLowerCase()
+  const red_flags: ScamAnalysisResult['red_flags'] = []
+  const legitimate_indicators: string[] = []
+  let score = 0
 
-  // Check for red flags
-  for (const pattern of RED_FLAG_PATTERNS) {
-    if (pattern.pattern.test(text)) {
-      riskScore += pattern.score;
-      redFlags.push({
-        flag: pattern.flag,
-        explanation: pattern.explanation
-      });
+  if (/guaranteed|no risk|100% safe|sure profit/.test(t)) {
+    red_flags.push({
+      flag: 'Guaranteed returns or risk-free claims',
+      explanation:
+        'No legitimate investment or loan can guarantee returns. This language is used to attract victims who do not know that all finance carries risk.'
+    })
+    score += 35
+  }
+
+  if (
+    /pay.*fee|upfront.*fee|processing fee|registration fee|admin fee|send.*first|transfer.*first/.test(t) &&
+    /loan|receive|get|approved|release|funds/.test(t)
+  ) {
+    red_flags.push({
+      flag: 'Fee required before receiving money',
+      explanation:
+        'This is the most common loan scam pattern. Legitimate lenders deduct fees from the loan disbursement and never ask you to send money first in order to receive money.'
+    })
+    score += 55
+  }
+
+  if (/limited time|act now|expires|24 hours|today only|urgent|last chance/.test(t)) {
+    red_flags.push({
+      flag: 'Artificial time pressure',
+      explanation:
+        'Creating urgency prevents you from thinking carefully, consulting others, or verifying the company. Legitimate financial institutions do not pressure you to decide immediately.'
+    })
+    score += 20
+  }
+
+  if (/\d+%\s*(per|a|every)\s*(day|week|month)/.test(t)) {
+    const match = t.match(/(\d+(?:\.\d+)?)\s*%\s*(?:per|a|every)\s*(day|week|month)/)
+    if (match?.[1] && match?.[2]) {
+      const rate = Number.parseFloat(match[1])
+      const period = match[2]
+      const aprMap: Record<string, number> = { day: 365, week: 52, month: 12 }
+      const apr = rate * (aprMap[period] || 12)
+      if (apr > 100) {
+        red_flags.push({
+          flag: `Interest rate of ${rate}% per ${period} = ${apr.toFixed(0)}% APR`,
+          explanation:
+            `Annual Percentage Rate above 100% is predatory lending. In many countries, legal limits are far lower. At ${apr.toFixed(0)}% APR, a $100 loan can cost $${apr.toFixed(0)} in yearly interest.`
+        })
+        score += 35
+      }
     }
   }
 
-  // Step 1 spec: if interest is mentioned and the parsed rate is > 60%, add a red flag.
-  const rateMatch = text.match(/(\d+(?:\.\d+)?)\s*%/);
-  if (rateMatch && rateMatch[1]) {
-    const rate = parseFloat(rateMatch[1]);
-    const mentionsInterest = /interest|apr|annual\s*percentage\s*rate/i.test(text);
-    if (mentionsInterest && rate > 60) {
-      riskScore += 35;
-      redFlags.push({
-        flag: `Interest rate of ${rate}% mentioned`,
-        explanation: `A rate of ${rate}% is extremely high. Legitimate microfinance typically charges 20-40% APR. This could be predatory lending.`
-      });
-    }
+  const hasAddress = /\d+\s+\w+\s+(street|road|avenue|lane|blvd|plaza|house)/i.test(text)
+  const hasRegNumber = /reg(?:istration)?\s*(?:no|number|#)[\s:]*[A-Z0-9]{5,}/i.test(text)
+
+  if (!hasAddress && !hasRegNumber) {
+    red_flags.push({
+      flag: 'No verifiable physical address or registration number',
+      explanation:
+        'Every legitimate financial institution has a license or registration number that can be checked with the regulator.'
+    })
+    score += 20
   }
 
-  // Check for legitimate indicators
-  for (const pattern of LEGITIMATE_PATTERNS) {
-    if (pattern.pattern.test(text)) {
-      legitimateIndicators.push(pattern.indicator);
-      riskScore -= 10; // Reduce risk for each legitimate indicator
-    }
+  if (/whatsapp|telegram|dm me|message me|chat.*privately/.test(t) && /loan|invest|money|fund/.test(t)) {
+    red_flags.push({
+      flag: 'Requests communication on private messaging apps',
+      explanation:
+        'Moving financial transactions to private chat apps removes audit trails and makes fraud harder to dispute.'
+    })
+    score += 25
   }
 
-  // Step 1 spec: no address OR no clear company name pattern should raise concern.
-  const hasNoAddressClaim = /no\s*address|without\s*address|no\s*physical\s*address/i.test(normalizedText);
-  const hasCompanyNamePattern = /\b(bank|microfinance|finance|financial|cooperative|ltd|limited|inc|llc|plc|corp|company)\b/i.test(text);
-  if (hasNoAddressClaim || !hasCompanyNamePattern) {
-    riskScore += 15;
-    redFlags.push({
-      flag: 'Missing verifiable company identity',
-      explanation: 'A legitimate financial provider should clearly show a company identity and a verifiable address before asking for money.'
-    });
+  if (hasRegNumber) {
+    legitimate_indicators.push('Contains what appears to be a registration number (verify on the official regulator website)')
+    score -= 10
+  }
+  if (/central bank|cbn|rbi|bank of ghana|bangko sentral|bank negara/i.test(text)) {
+    legitimate_indicators.push('References a recognized regulatory body (verify independently)')
+    score -= 10
+  }
+  if (hasAddress) {
+    legitimate_indicators.push('Includes a physical address (verify before transacting)')
+    score -= 5
   }
 
-  // Ensure score stays within bounds
-  riskScore = Math.max(0, Math.min(100, riskScore));
+  score = Math.max(0, Math.min(100, score))
 
-  const riskLevel = getRiskLevel(riskScore);
+  const risk_level: ScamAnalysisResult['risk_level'] =
+    score >= 75 ? 'very_high' : score >= 50 ? 'high' : score >= 25 ? 'medium' : 'low'
+
+  const recommendationMap: Record<ScamAnalysisResult['risk_level'], string> = {
+    very_high:
+      'Do NOT proceed. Do not send any money. Block this contact. If you already sent money, report to your national financial crimes authority immediately.',
+    high:
+      'Stop and verify before doing anything. Do not send money until you have independently confirmed this company is registered with your national financial regulator.',
+    medium:
+      'Proceed with caution. Get everything in writing. Verify registration independently. Never pay a fee before receiving funds.',
+    low:
+      'This appears relatively low risk, but always get terms in writing and verify registration before signing anything.'
+  }
+
+  const summaryMap: Record<ScamAnalysisResult['risk_level'], string> = {
+    very_high: `This offer has ${red_flags.length} serious red flags and scores ${score}/100. It matches known scam patterns closely.`,
+    high: `This offer has ${red_flags.length} warning signs and scores ${score}/100. Independent verification is essential before proceeding.`,
+    medium: `This offer has ${red_flags.length} caution flags and scores ${score}/100. It may be legitimate but requires careful verification.`,
+    low: `This offer appears relatively low risk (${score}/100) with ${red_flags.length} minor concerns. Standard due diligence applies.`
+  }
 
   return {
-    risk_level: riskLevel,
-    risk_score: riskScore,
-    red_flags: redFlags,
-    legitimate_indicators: legitimateIndicators,
-    recommendation: getRecommendation(riskLevel),
-    summary: getSummary(riskLevel, redFlags.length)
-  };
-}
-
-/**
- * Get common scams for a specific country
- * @param countryCode - ISO 3166-1 alpha-2 country code
- * @returns Array of common scam descriptions
- */
-export function getCommonScams(countryCode: string): string[] {
-  // These are universal scams common across emerging markets
-  const commonScams = [
-    'Advance fee loan scams — You\'re asked to pay a "processing fee" before receiving a loan that never arrives',
-    'Pyramid schemes disguised as "investment clubs" or "savings groups" promising high returns for recruiting others',
-    'Fake government grant programs asking for personal information or small "registration fees"',
-    'Romance scams where online contacts ask for emergency money transfers',
-    'Fake job offers requiring upfront payment for "training materials" or "registration"'
-  ];
-
-  // Add country-specific context
-  const countrySpecific: Record<string, string[]> = {
-    NG: ['BVN harvesting scams — Never share your Bank Verification Number with unofficial sources'],
-    KE: ['Fake M-Pesa promotions — Safaricom never asks you to send money to receive prizes'],
-    IN: ['UPI fraud calls — Banks never ask for your UPI PIN over the phone'],
-    PH: ['Fake overseas job agencies — Verify agencies with POEA before paying any fees'],
-    BD: ['bKash lottery scams — Mobile money providers don\'t run lotteries requiring payments']
-  };
-
-  return [...commonScams, ...(countrySpecific[countryCode] || [])];
+    risk_level,
+    risk_score: score,
+    red_flags,
+    legitimate_indicators,
+    recommendation: recommendationMap[risk_level],
+    summary: summaryMap[risk_level]
+  }
 }

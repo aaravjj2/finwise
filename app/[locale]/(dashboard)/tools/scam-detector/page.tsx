@@ -30,7 +30,6 @@ export default function ScamDetectorPage(): JSX.Element {
       }
 
       const data = await response.json();
-      await new Promise((resolve) => setTimeout(resolve, 1500));
       setResult(data);
     } catch {
       setError(t('analysis_error'));
@@ -59,6 +58,7 @@ export default function ScamDetectorPage(): JSX.Element {
           {t('paste_offer')}
         </label>
         <textarea
+          data-testid="offer-textarea"
           value={offer}
           onChange={(e) => setOffer(e.target.value)}
           placeholder={t('offer_placeholder')}
@@ -66,6 +66,7 @@ export default function ScamDetectorPage(): JSX.Element {
           className="w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-neutral-900 placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white"
         />
         <button
+          data-testid="analyze-button"
           onClick={handleAnalyze}
           disabled={loading || !offer.trim()}
           className="mt-4 w-full rounded-lg bg-primary-500 px-4 py-3 font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
@@ -91,6 +92,7 @@ export default function ScamDetectorPage(): JSX.Element {
                 {t('risk_level')}
               </span>
               <span
+                data-testid="risk-badge"
                 className={`rounded-full px-3 py-1 text-sm font-semibold ${
                   riskColors[result.risk_level]
                 }`}
@@ -130,7 +132,7 @@ export default function ScamDetectorPage(): JSX.Element {
               </h3>
               <ul className="space-y-2">
                 {result.red_flags.map((flag, index) => (
-                  <li key={index} className="text-sm">
+                  <li key={index} data-testid="red-flags-list" className="text-sm">
                     <p className="font-medium text-red-800 dark:text-red-300">{flag.flag}</p>
                     <p className="text-red-700 dark:text-red-400">{flag.explanation}</p>
                   </li>
