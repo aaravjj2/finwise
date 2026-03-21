@@ -18,7 +18,7 @@
     "setup:local": "bash scripts/setup-local.sh"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1",
+    "@anthropic-ai/sdk": "^0.80.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.47.10",
     "@tanstack/react-query": "^5.62.8",
