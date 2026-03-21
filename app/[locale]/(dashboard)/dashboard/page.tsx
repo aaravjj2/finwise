@@ -46,12 +46,12 @@ export default async function DashboardPage(): Promise<JSX.Element> {
 
   // Calculate totals
   const totalIncome = (entries || [])
-    .filter((e) => e.type === 'income')
-    .reduce((sum, e) => sum + Number(e.amount), 0);
+    .filter((e: { type: string }) => e.type === 'income')
+    .reduce((sum: number, e: { amount: number | string }) => sum + Number(e.amount), 0);
 
   const totalExpenses = (entries || [])
-    .filter((e) => e.type === 'expense')
-    .reduce((sum, e) => sum + Number(e.amount), 0);
+    .filter((e: { type: string }) => e.type === 'expense')
+    .reduce((sum: number, e: { amount: number | string }) => sum + Number(e.amount), 0);
 
   const savings = totalIncome - totalExpenses;
   const savingsRate = totalIncome > 0 ? (savings / totalIncome) * 100 : 0;

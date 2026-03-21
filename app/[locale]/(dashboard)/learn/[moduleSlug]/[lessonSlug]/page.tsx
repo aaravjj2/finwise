@@ -65,7 +65,7 @@ export default async function LessonPage({ params }: LessonPageProps): Promise<J
     .eq('module_id', module.id)
     .order('order_index', { ascending: true });
 
-  const lessonSlugs = (allLessons || []).map((l) => l.slug);
+  const lessonSlugs = (allLessons || []).map((l: { slug: string }) => l.slug);
   const currentIndex = lessonSlugs.indexOf(params.lessonSlug);
   const prevLesson = currentIndex > 0 ? lessonSlugs[currentIndex - 1] : null;
   const nextLesson = currentIndex < lessonSlugs.length - 1 ? lessonSlugs[currentIndex + 1] : null;

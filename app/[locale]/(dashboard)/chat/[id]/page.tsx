@@ -41,7 +41,15 @@ export default async function ChatConversationPage({
     .eq('conversation_id', params.id)
     .order('created_at', { ascending: true });
 
-  const initialMessages: Message[] = (messages || []).map((m) => ({
+  const initialMessages: Message[] = (messages || []).map((m: {
+    id: string;
+    conversation_id: string;
+    role: string;
+    content: string;
+    created_at: string;
+    audio_url: string | null;
+    card_data: Message['card_data'];
+  }) => ({
     id: m.id,
     conversation_id: m.conversation_id,
     role: m.role as 'user' | 'assistant',

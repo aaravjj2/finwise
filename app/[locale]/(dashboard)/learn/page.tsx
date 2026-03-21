@@ -27,7 +27,7 @@ export default async function LearnPage(): Promise<JSX.Element> {
     completedModules = [
       ...new Set(
         (progress || [])
-          .map((p) => {
+          .map((p: { lessons: unknown }) => {
             const lesson = p.lessons as { learning_modules: { slug: string } } | null;
             return lesson?.learning_modules?.slug;
           })

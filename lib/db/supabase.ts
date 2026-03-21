@@ -70,7 +70,7 @@ export async function getUserProfile(): Promise<import('@/types').UserProfile | 
   const completedModules = [
     ...new Set(
       (progress ?? [])
-        .map((p) => {
+        .map((p: { lessons: unknown }) => {
           const lesson = p.lessons as { learning_modules: { slug: string } } | null;
           return lesson?.learning_modules?.slug;
         })
