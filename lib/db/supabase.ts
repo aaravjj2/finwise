@@ -82,7 +82,9 @@ export async function getUserProfile(): Promise<import('@/types').UserProfile | 
     ...userData,
     completed_modules: completedModules,
     current_module: null,
-    badges: (badges ?? []).map((b) => b.badges).filter(Boolean) as import('@/types').Badge[],
+    badges: (badges ?? [])
+      .map((b: { badges: import('@/types').Badge | null }) => b.badges)
+      .filter(Boolean) as import('@/types').Badge[],
     financial_health_score: 0,
   };
 }
