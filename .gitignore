@@ -1,75 +1,71 @@
-# Dependencies
-node_modules
-.pnp
-.pnp.js
+# dependencies
+node_modules/
 
-# Build outputs
+# next / vite / build outputs
 .next/
 out/
-build/
 dist/
+build/
 
-# Testing
-coverage/
-playwright-report/
-playwright/.cache/
-test-results/
+# caches
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
 
-# Environment files - NEVER COMMIT SECRETS
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# env files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env*.local
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-.DS_Store
-
-# Debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Vercel
-.vercel
 
 # TypeScript
 *.tsbuildinfo
-next-env.d.ts
 
-# Sentry
-.sentryclirc
+# coverage / reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+htmlcov/
 
-# Misc
-*.pem
-*.log
+# local databases / temp data
+*.sqlite
+*.sqlite3
+*.db
+
+# OS / editor files
+.DS_Store
 Thumbs.db
-desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
 
-# Supabase
-supabase/.branches
-supabase/.temp
-
-# Local storage
-.finwise-cache/
-
-# Zone.Identifier files (Windows/WSL)
+# Windows alternate data stream artifacts
 *:Zone.Identifier
 
-# Temporary files
+# local deployment / platform state
+.vercel/
+
+# generated media / temp files
 tmp/
 temp/
-*.tmp
+.tmp/
 
-# Cache
-.cache/
-.eslintcache
-.turbo
+# optional: local Supabase state if created later
+.supabase/
+
+# optional: Python cache, in case scripts/tests add it later
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
