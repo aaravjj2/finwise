@@ -24,6 +24,7 @@
     "settings": "সেটিংস"
   },
   "auth": {
+    "loading": "Loading...",
     "login_title": "FinWise-এ স্বাগতম",
     "login_subtitle": "শুরু করতে আপনার ফোন নম্বর দিন",
     "phone_label": "ফোন নম্বর",

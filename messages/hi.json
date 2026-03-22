@@ -24,6 +24,7 @@
     "settings": "सेटिंग्स"
   },
   "auth": {
+    "loading": "लोड हो रहा है...",
     "login_title": "FinWise में आपका स्वागत है",
     "login_subtitle": "शुरू करने के लिए अपना फ़ोन नंबर दर्ज करें",
     "phone_label": "फ़ोन नंबर",

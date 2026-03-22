@@ -1,11 +1,13 @@
 // FinWise Service Worker
-const CACHE_NAME = 'finwise-v1';
-const OFFLINE_URL = '/offline';
+const CACHE_NAME = 'finwise-v2';
+const OFFLINE_URL = '/en/offline';
 
 const STATIC_ASSETS = [
   '/',
-  '/offline',
+  '/en/offline',
   '/manifest.json',
+  '/icon.svg',
+  '/favicon.ico',
 ];
 
 const CACHE_STRATEGIES = {
@@ -44,9 +46,12 @@ const CACHE_STRATEGIES = {
       }
       // Return offline page for navigation requests
       if (request.mode === 'navigate') {
-        return caches.match(OFFLINE_URL);
+        const offlineResponse = await caches.match(OFFLINE_URL);
+        if (offlineResponse) {
+          return offlineResponse;
+        }
       }
-      return new Response('Offline', { status: 503 });
+      return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } });
     }
   },
 
@@ -60,7 +65,10 @@ const CACHE_STRATEGIES = {
         cache.put(request, networkResponse.clone());
       }
       return networkResponse;
-    }).catch(() => null);
+    }).catch(() => {
+      // Return cached response or a 503 response if network fails
+      return cachedResponse || new Response('Offline', { status: 503 });
+    });
 
     return cachedResponse || fetchPromise;
   },

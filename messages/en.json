@@ -24,6 +24,7 @@
     "settings": "Settings"
   },
   "auth": {
+    "loading": "Loading...",
     "login_title": "Welcome to FinWise",
     "login_subtitle": "Enter your phone number to get started",
     "phone_label": "Phone number",

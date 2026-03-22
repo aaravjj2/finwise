@@ -24,6 +24,7 @@
     "settings": "Mipangilio"
   },
   "auth": {
+    "loading": "Loading...",
     "login_title": "Karibu FinWise",
     "login_subtitle": "Weka nambari yako ya simu kuanza",
     "phone_label": "Nambari ya simu",

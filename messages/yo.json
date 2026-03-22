@@ -24,6 +24,7 @@
     "settings": "Ètò"
   },
   "auth": {
+    "loading": "Loading...",
     "login_title": "Káàbọ̀ sí FinWise",
     "login_subtitle": "Tẹ nọ́mbà fóònù rẹ láti bẹ̀rẹ̀",
     "phone_label": "Nọ́mbà fóònù",
