@@ -3,9 +3,9 @@ import { z } from 'zod'
 
 const RequestSchema = z.object({
   message: z.string().min(1).max(2000),
-  conversationId: z.string().uuid().optional(),
+  conversationId: z.string().uuid().nullish(),
   language: z.string().default('en'),
-  userId: z.string().uuid().optional()
+  userId: z.string().uuid().nullish()
 })
 
 export async function POST(req: Request): Promise<Response> {

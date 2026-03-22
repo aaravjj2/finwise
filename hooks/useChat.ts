@@ -68,7 +68,7 @@ export function useChat({ conversationId: initialConvId, initialMessages = [] }:
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: content,
-            conversationId,
+            ...(conversationId && { conversationId }),
             language: locale || 'en',
           }),
         });
