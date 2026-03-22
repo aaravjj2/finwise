@@ -12,8 +12,20 @@ export default async function DashboardPage(): Promise<JSX.Element> {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Demo mode - show empty state dashboard with getting started tips
   if (!user) {
-    return <div>Please log in</div>;
+    return (
+      <DashboardContent
+        healthScore={50}
+        totalIncome={0}
+        totalExpenses={0}
+        savings={0}
+        currency="USD"
+        goals={[]}
+        recentEntries={[]}
+        isDemo={true}
+      />
+    );
   }
 
   // Get current month's entries
@@ -68,6 +80,7 @@ export default async function DashboardPage(): Promise<JSX.Element> {
       currency={currency}
       goals={(goals || []) as SavingsGoal[]}
       recentEntries={(entries || []).slice(0, 5) as FinancialEntry[]}
+      isDemo={false}
     />
   );
 }
@@ -89,6 +102,7 @@ function DashboardContent({
   currency,
   goals,
   recentEntries,
+  isDemo = false,
 }: {
   healthScore: number;
   totalIncome: number;
@@ -97,6 +111,7 @@ function DashboardContent({
   currency: string;
   goals: SavingsGoal[];
   recentEntries: FinancialEntry[];
+  isDemo?: boolean;
 }): JSX.Element {
   const t = useTranslations('dashboard');
 
@@ -106,6 +121,22 @@ function DashboardContent({
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">{t('title')}</h1>
         <AddEntryModal currency={currency} />
       </div>
+
+      {isDemo && (
+        <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 dark:border-primary-800 dark:bg-primary-900/20">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">💡</span>
+            <div>
+              <h3 className="font-semibold text-primary-800 dark:text-primary-200">
+                Demo Mode
+              </h3>
+              <p className="text-sm text-primary-700 dark:text-primary-300">
+                You&apos;re exploring FinWise without an account. Sign up to track your income, expenses, and savings goals!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <HealthScore score={healthScore} />

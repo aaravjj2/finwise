@@ -11,6 +11,19 @@ export default function ScamDetectorPage(): JSX.Element {
   const [result, setResult] = useState<ScamAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const EXAMPLE_SCAM = `CONGRATULATIONS! You've been pre-approved for a ₦500,000 loan at just 5% weekly interest!
+No credit check required. 100% approval guaranteed!
+To receive your funds immediately, pay only ₦15,000 processing fee.
+Send to: 0123456789 (FirstBank)
+This offer expires in 24 hours! Act now!
+WhatsApp: +234 801 234 5678`;
+
+  function handleTryExample(): void {
+    setOffer(EXAMPLE_SCAM);
+    setResult(null);
+    setError(null);
+  }
+
   async function handleAnalyze(): Promise<void> {
     if (!offer.trim()) return;
 
@@ -51,6 +64,17 @@ export default function ScamDetectorPage(): JSX.Element {
         {t('scam_detector')}
       </h1>
       <p className="mb-6 text-neutral-600 dark:text-neutral-400">{t('scam_detector_desc')}</p>
+
+      {/* Try example button */}
+      {!offer && !result && (
+        <button
+          onClick={handleTryExample}
+          className="mb-4 flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-100 dark:border-primary-800 dark:bg-primary-900/20 dark:text-primary-300 dark:hover:bg-primary-900/30"
+        >
+          <span>✨</span>
+          Try example scam message
+        </button>
+      )}
 
       {/* Input */}
       <div className="mb-6 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
