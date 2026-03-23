@@ -15,6 +15,7 @@
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "seed:demo": "npx ts-node scripts/seed-demo.ts",
+    "import:institutions": "npx ts-node scripts/import-institutions.ts",
     "setup:local": "bash scripts/setup-local.sh"
   },
   "dependencies": {
