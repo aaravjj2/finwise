@@ -53,6 +53,86 @@ CROSS JOIN (VALUES
 WHERE m.slug = 'smart-borrowing';
 
 -- ===========================================
+-- Lessons for Sending Money Home Module
+-- ===========================================
+INSERT INTO lessons (module_id, slug, title_key, order_index, estimated_minutes)
+SELECT
+  m.id,
+  l.slug,
+  l.title_key,
+  l.order_index,
+  l.estimated_minutes
+FROM learning_modules m
+CROSS JOIN (VALUES
+  ('why-remit', 'lessons.remittance.why_remit.title', 1, 4),
+  ('provider-fees', 'lessons.remittance.provider_fees.title', 2, 4),
+  ('exchange-rates', 'lessons.remittance.exchange_rates.title', 3, 4),
+  ('safe-transfers', 'lessons.remittance.safe_transfers.title', 4, 4),
+  ('remittance-quiz', 'lessons.remittance.quiz.title', 5, 4)
+) AS l(slug, title_key, order_index, estimated_minutes)
+WHERE m.slug = 'sending-money-home';
+
+-- ===========================================
+-- Lessons for Protecting Your Money Module
+-- ===========================================
+INSERT INTO lessons (module_id, slug, title_key, order_index, estimated_minutes)
+SELECT
+  m.id,
+  l.slug,
+  l.title_key,
+  l.order_index,
+  l.estimated_minutes
+FROM learning_modules m
+CROSS JOIN (VALUES
+  ('spotting-scams', 'lessons.protection.spotting_scams.title', 1, 5),
+  ('password-safety', 'lessons.protection.password_safety.title', 2, 5),
+  ('mobile-money-security', 'lessons.protection.mobile_money_security.title', 3, 5),
+  ('family-fraud', 'lessons.protection.family_fraud.title', 4, 5),
+  ('protection-quiz', 'lessons.protection.quiz.title', 5, 5)
+) AS l(slug, title_key, order_index, estimated_minutes)
+WHERE m.slug = 'protecting-your-money';
+
+-- ===========================================
+-- Lessons for Running a Business Module
+-- ===========================================
+INSERT INTO lessons (module_id, slug, title_key, order_index, estimated_minutes)
+SELECT
+  m.id,
+  l.slug,
+  l.title_key,
+  l.order_index,
+  l.estimated_minutes
+FROM learning_modules m
+CROSS JOIN (VALUES
+  ('business-budget', 'lessons.business.business_budget.title', 1, 7),
+  ('pricing-basics', 'lessons.business.pricing_basics.title', 2, 7),
+  ('cashflow-tracking', 'lessons.business.cashflow_tracking.title', 3, 7),
+  ('inventory-control', 'lessons.business.inventory_control.title', 4, 7),
+  ('business-quiz', 'lessons.business.quiz.title', 5, 7)
+) AS l(slug, title_key, order_index, estimated_minutes)
+WHERE m.slug = 'running-a-business';
+
+-- ===========================================
+-- Lessons for Planning Your Future Module
+-- ===========================================
+INSERT INTO lessons (module_id, slug, title_key, order_index, estimated_minutes)
+SELECT
+  m.id,
+  l.slug,
+  l.title_key,
+  l.order_index,
+  l.estimated_minutes
+FROM learning_modules m
+CROSS JOIN (VALUES
+  ('goal-setting', 'lessons.future.goal_setting.title', 1, 8),
+  ('retirement-basics', 'lessons.future.retirement_basics.title', 2, 8),
+  ('insurance-basics', 'lessons.future.insurance_basics.title', 3, 8),
+  ('family-plan', 'lessons.future.family_plan.title', 4, 8),
+  ('future-quiz', 'lessons.future.quiz.title', 5, 8)
+) AS l(slug, title_key, order_index, estimated_minutes)
+WHERE m.slug = 'planning-your-future';
+
+-- ===========================================
 -- Badges
 -- ===========================================
 INSERT INTO badges (slug, name_key, description_key, icon_emoji) VALUES

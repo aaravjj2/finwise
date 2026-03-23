@@ -249,6 +249,34 @@
       "reading_loan_terms": { "title": "Reading Loan Terms" },
       "microloan_options": { "title": "Microloan Options" },
       "quiz": { "title": "Borrowing Quiz" }
+    },
+    "remittance": {
+      "why_remit": { "title": "Why Remittances Need a Plan" },
+      "provider_fees": { "title": "Understanding Provider Fees" },
+      "exchange_rates": { "title": "Exchange Rates That Matter" },
+      "safe_transfers": { "title": "Safe Transfer Habits" },
+      "quiz": { "title": "Remittance Quiz" }
+    },
+    "protection": {
+      "spotting_scams": { "title": "Spotting Scams Early" },
+      "password_safety": { "title": "Password Safety Basics" },
+      "mobile_money_security": { "title": "Mobile Money Security" },
+      "family_fraud": { "title": "Family Fraud and Boundaries" },
+      "quiz": { "title": "Protection Quiz" }
+    },
+    "business": {
+      "business_budget": { "title": "Business Budget Foundations" },
+      "pricing_basics": { "title": "Pricing for Sustainability" },
+      "cashflow_tracking": { "title": "Cashflow Tracking" },
+      "inventory_control": { "title": "Inventory Control Basics" },
+      "quiz": { "title": "Business Quiz" }
+    },
+    "future": {
+      "goal_setting": { "title": "Goal Setting That Works" },
+      "retirement_basics": { "title": "Retirement Basics for Informal Workers" },
+      "insurance_basics": { "title": "Insurance Essentials" },
+      "family_plan": { "title": "Family Financial Plan" },
+      "quiz": { "title": "Future Planning Quiz" }
     }
   },
   "settings": {

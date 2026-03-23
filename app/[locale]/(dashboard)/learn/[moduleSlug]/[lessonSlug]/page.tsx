@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/db/supabase';
 import { LessonReader } from '@/components/learn/LessonReader';
+import { CompleteLessonButton } from '@/components/learn/CompleteLessonButton';
+import { QuizContainer } from '@/components/learn/QuizContainer';
 
 interface LessonPageProps {
   params: {
@@ -65,6 +67,28 @@ export default async function LessonPage({ params }: LessonPageProps): Promise<J
     .eq('module_id', module.id)
     .order('order_index', { ascending: true });
 
+  const { data: quiz } = await supabase
+    .from('quizzes')
+    .select('questions')
+    .eq('lesson_id', lesson.id)
+    .maybeSingle();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let initiallyCompleted = false;
+  if (user) {
+    const { data: progress } = await supabase
+      .from('user_progress')
+      .select('completed')
+      .eq('user_id', user.id)
+      .eq('lesson_id', lesson.id)
+      .maybeSingle();
+
+    initiallyCompleted = Boolean(progress?.completed);
+  }
+
   const lessonSlugs = (allLessons || []).map((l: { slug: string }) => l.slug);
   const currentIndex = lessonSlugs.indexOf(params.lessonSlug);
   const prevLesson = currentIndex > 0 ? lessonSlugs[currentIndex - 1] : null;
@@ -78,6 +102,8 @@ export default async function LessonPage({ params }: LessonPageProps): Promise<J
       locale={params.locale}
       prevLesson={prevLesson || undefined}
       nextLesson={nextLesson || undefined}
+      quizQuestions={Array.isArray(quiz?.questions) ? quiz.questions : []}
+      initiallyCompleted={initiallyCompleted}
     />
   );
 }
@@ -89,15 +115,44 @@ function LessonContent({
   locale,
   prevLesson,
   nextLesson,
+  quizQuestions,
+  initiallyCompleted,
 }: {
   module: { slug: string; title_key: string };
-  lesson: { id: string; title_key: string };
+  lesson: { id: string; title_key: string; slug: string };
   content: { title: string; content: string } | null;
   locale: string;
   prevLesson?: string;
   nextLesson?: string;
+  quizQuestions: unknown[];
+  initiallyCompleted: boolean;
 }): JSX.Element {
   const t = useTranslations();
+  const isQuizLesson = lesson.slug.endsWith('-quiz');
+
+  const parsedQuiz = quizQuestions.filter(
+    (q): q is { id: string; question: string; options: string[]; correct_index: number; explanation: string } => {
+      if (!q || typeof q !== 'object') {
+        return false;
+      }
+
+      const candidate = q as {
+        id?: unknown;
+        question?: unknown;
+        options?: unknown;
+        correct_index?: unknown;
+        explanation?: unknown;
+      };
+
+      return (
+        typeof candidate.id === 'string' &&
+        typeof candidate.question === 'string' &&
+        Array.isArray(candidate.options) &&
+        typeof candidate.correct_index === 'number' &&
+        typeof candidate.explanation === 'string'
+      );
+    },
+  );
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -126,6 +181,42 @@ function LessonContent({
         title={content?.title || t(lesson.title_key)}
         content={content?.content || t('learn.content_not_available')}
       />
+
+      {isQuizLesson ? (
+        <QuizContainer
+          lessonId={lesson.id}
+          questions={parsedQuiz}
+          nextHref={nextLesson ? `/${locale}/learn/${module.slug}/${nextLesson}` : undefined}
+          fallbackHref={`/${locale}/learn/${module.slug}`}
+          labels={{
+            questionOf: (current: number, total: number) => t('quiz.question_of', { current, total }),
+            next: t('quiz.next'),
+            finish: t('quiz.finish'),
+            score: (value: number) => t('quiz.score', { score: value }),
+            pass: t('quiz.pass'),
+            fail: t('quiz.fail'),
+            retry: t('quiz.retry'),
+            perfect: t('quiz.perfect'),
+            saving: t('common.loading'),
+            continueToNext: t('learn.next'),
+            doneToModule: t('learn.finish_module'),
+            saveError: t('errors.generic'),
+          }}
+        />
+      ) : (
+        <CompleteLessonButton
+          lessonId={lesson.id}
+          completeLabel={t('common.finish')}
+          savingLabel={t('common.loading')}
+          doneLabel={t('learn.completed')}
+          errorLabel={t('errors.generic')}
+          nextHref={nextLesson ? `/${locale}/learn/${module.slug}/${nextLesson}` : undefined}
+          nextLabel={t('learn.next')}
+          fallbackHref={`/${locale}/learn/${module.slug}`}
+          fallbackLabel={t('learn.finish_module')}
+          initialCompleted={initiallyCompleted}
+        />
+      )}
 
       {/* Navigation */}
       <div className="mt-8 flex items-center justify-between border-t border-neutral-200 pt-6 dark:border-neutral-700">
