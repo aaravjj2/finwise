@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 const COUNTRY_CODES = [
   { code: '+234', country: 'NG', flag: '🇳🇬', name: 'Nigeria' },
+  { code: '+1', country: 'US', flag: '🇺🇸', name: 'United States' },
   { code: '+254', country: 'KE', flag: '🇰🇪', name: 'Kenya' },
   { code: '+255', country: 'TZ', flag: '🇹🇿', name: 'Tanzania' },
   { code: '+256', country: 'UG', flag: '🇺🇬', name: 'Uganda' },

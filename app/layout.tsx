@@ -44,11 +44,6 @@ export const metadata: Metadata = {
     follow: true,
   },
   manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'FinWise',
-  },
   formatDetection: {
     telephone: false,
   },

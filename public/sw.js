@@ -110,6 +110,14 @@ self.addEventListener('fetch', (event) => {
 
   // Skip API calls (handle offline queue separately)
   if (url.pathname.startsWith('/api/')) {
+    if (request.method !== 'GET') {
+      event.respondWith(
+        fetch(request).catch(
+          () => new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } })
+        )
+      );
+      return;
+    }
     event.respondWith(CACHE_STRATEGIES.networkFirst(request));
     return;
   }

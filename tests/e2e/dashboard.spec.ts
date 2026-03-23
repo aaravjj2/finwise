@@ -10,5 +10,5 @@ test('dashboard page loads and shows money section', async ({ page }) => {
   await enterDemoMode(page)
   await page.goto('/en/dashboard')
 
-  await expect(page.getByText(/please log in/i)).toBeVisible()
+  await expect(page.getByRole('heading', { name: /my money/i })).toBeVisible()
 })

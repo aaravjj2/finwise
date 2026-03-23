@@ -31,6 +31,7 @@ test.describe('Onboarding Flow', () => {
     await countryButton.click();
 
     // Should show dropdown with countries
+    await expect(page.getByText('United States')).toBeVisible();
     await expect(page.getByText('Nigeria')).toBeVisible();
     await expect(page.getByText('Kenya')).toBeVisible();
   });
