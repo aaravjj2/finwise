@@ -1,0 +1,13 @@
+[
+  {
+    "name": "LAPO Microfinance Bank",
+    "type": "microfinance",
+    "country_code": "NG",
+    "website": "https://lapo-nigeria.org",
+    "interest_rate_min": 18,
+    "interest_rate_max": 36,
+    "accepts_first_time_borrowers": true,
+    "requires_collateral": false,
+    "description": "Large microfinance institution in Nigeria with first-time borrower programs and financial literacy support."
+  }
+]

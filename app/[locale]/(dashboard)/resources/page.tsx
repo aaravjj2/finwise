@@ -60,7 +60,7 @@ function ResourcesContent({
       <h1 className="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">{t('title')}</h1>
 
       {/* Quick actions */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-2">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Link
           href={`/${locale}/resources/find-loan`}
           className="flex items-center gap-4 rounded-xl border border-neutral-200 bg-white p-4 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-600 dark:hover:bg-primary-900/20"
@@ -87,6 +87,21 @@ function ResourcesContent({
             <p className="font-medium text-neutral-900 dark:text-white">{t('send_money')}</p>
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
               {t('send_money_desc')}
+            </p>
+          </div>
+        </Link>
+
+        <Link
+          href={`/${locale}/circles`}
+          className="flex items-center gap-4 rounded-xl border border-neutral-200 bg-white p-4 transition-colors hover:border-primary-300 hover:bg-primary-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-primary-600 dark:hover:bg-primary-900/20"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-2xl dark:bg-emerald-900/30">
+            🤝
+          </div>
+          <div>
+            <p className="font-medium text-neutral-900 dark:text-white">Savings Circles</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Save with friends in trusted rotating groups.
             </p>
           </div>
         </Link>

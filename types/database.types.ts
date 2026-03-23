@@ -392,6 +392,56 @@ export type Database = {
         }
         Relationships: []
       }
+      savings_circles: {
+        Row: {
+          contribution_amount: number
+          created_at: string
+          creator_id: string | null
+          currency_code: string | null
+          current_cycle: number | null
+          id: string
+          invite_code: string | null
+          max_members: number | null
+          name: string
+          period: string
+          status: string | null
+        }
+        Insert: {
+          contribution_amount: number
+          created_at?: string
+          creator_id?: string | null
+          currency_code?: string | null
+          current_cycle?: number | null
+          id?: string
+          invite_code?: string | null
+          max_members?: number | null
+          name: string
+          period: string
+          status?: string | null
+        }
+        Update: {
+          contribution_amount?: number
+          created_at?: string
+          creator_id?: string | null
+          currency_code?: string | null
+          current_cycle?: number | null
+          id?: string
+          invite_code?: string | null
+          max_members?: number | null
+          name?: string
+          period?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_circles_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       savings_goals: {
         Row: {
           completed: boolean
@@ -433,6 +483,106 @@ export type Database = {
           {
             foreignKeyName: "savings_goals_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      circle_members: {
+        Row: {
+          circle_id: string
+          has_received_payout: boolean | null
+          joined_at: string | null
+          payout_position: number
+          total_contributed: number | null
+          user_id: string
+        }
+        Insert: {
+          circle_id: string
+          has_received_payout?: boolean | null
+          joined_at?: string | null
+          payout_position: number
+          total_contributed?: number | null
+          user_id: string
+        }
+        Update: {
+          circle_id?: string
+          has_received_payout?: boolean | null
+          joined_at?: string | null
+          payout_position?: number
+          total_contributed?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_members_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "savings_circles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "circle_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      circle_contributions: {
+        Row: {
+          amount: number
+          circle_id: string | null
+          confirmed_by: string[] | null
+          created_at: string | null
+          cycle: number
+          disputed: boolean | null
+          from_user_id: string | null
+          id: string
+          to_user_id: string | null
+        }
+        Insert: {
+          amount: number
+          circle_id?: string | null
+          confirmed_by?: string[] | null
+          created_at?: string | null
+          cycle: number
+          disputed?: boolean | null
+          from_user_id?: string | null
+          id?: string
+          to_user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          circle_id?: string | null
+          confirmed_by?: string[] | null
+          created_at?: string | null
+          cycle?: number
+          disputed?: boolean | null
+          from_user_id?: string | null
+          id?: string
+          to_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_contributions_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "savings_circles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "circle_contributions_from_user_id_fkey"
+            columns: ["from_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "circle_contributions_to_user_id_fkey"
+            columns: ["to_user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

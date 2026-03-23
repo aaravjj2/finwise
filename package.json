@@ -16,7 +16,10 @@
     "format": "prettier --write .",
     "seed:demo": "npx ts-node scripts/seed-demo.ts",
     "import:institutions": "npx ts-node scripts/import-institutions.ts",
-    "setup:local": "bash scripts/setup-local.sh"
+    "setup:local": "bash scripts/setup-local.sh",
+    "audit:lighthouse": "lhci autorun --config=.lighthouserc.json",
+    "audit:a11y": "npx ts-node scripts/a11y-audit.ts",
+    "audit:all": "npm run audit:lighthouse && npm run audit:a11y"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
@@ -38,6 +41,8 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.49.1",
     "@sentry/nextjs": "^8.47.0",
     "@testing-library/jest-dom": "^6.9.1",
@@ -58,7 +63,8 @@
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "wait-on": "^8.0.1"
   },
   "engines": {
     "node": ">=18.17.0"

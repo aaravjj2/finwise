@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FinWise institution dataset",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "name",
+      "type",
+      "country_code",
+      "website",
+      "interest_rate_min",
+      "interest_rate_max",
+      "accepts_first_time_borrowers",
+      "requires_collateral",
+      "description"
+    ],
+    "properties": {
+      "name": { "type": "string", "minLength": 2 },
+      "type": {
+        "type": "string",
+        "enum": ["microfinance", "bank", "mobile_money", "ngo", "government"]
+      },
+      "country_code": { "type": "string", "pattern": "^[A-Z]{2}$" },
+      "website": { "type": "string", "format": "uri" },
+      "interest_rate_min": { "type": ["number", "null"], "minimum": 0, "maximum": 999 },
+      "interest_rate_max": { "type": ["number", "null"], "minimum": 0, "maximum": 999 },
+      "accepts_first_time_borrowers": { "type": "boolean" },
+      "requires_collateral": { "type": "boolean" },
+      "description": { "type": "string", "minLength": 10 }
+    }
+  }
+}

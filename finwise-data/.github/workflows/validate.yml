@@ -1,0 +1,23 @@
+name: Validate Data
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install validator
+        run: npm install --no-save ajv-cli
+
+      - name: Validate country files
+        run: npx ajv validate -s finwise-data/schema.json -d "finwise-data/countries/*.json"

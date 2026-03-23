@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "crawl": "npx ts-node --esm --experimentalSpecifierResolution=node src/index.ts"
+    "crawl": "npx ts-node --esm --experimentalSpecifierResolution=node src/index.ts",
+    "schedule": "npx ts-node --esm --experimentalSpecifierResolution=node src/scheduler.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.0",
