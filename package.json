@@ -8,6 +8,7 @@
     "dev:ai": "docker-compose -f docker-compose.dev.yml up -d && npm run dev",
     "build": "next build",
     "start": "next start",
+    "start:standalone": "node .next/standalone/server.js",
     "lint": "next lint",
     "check-types": "tsc --noEmit",
     "test": "vitest",
